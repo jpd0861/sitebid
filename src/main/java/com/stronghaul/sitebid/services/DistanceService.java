@@ -1,6 +1,7 @@
 package com.stronghaul.sitebid.services;
 
 import com.stronghaul.sitebid.configuration.GeositeConfig;
+import com.stronghaul.sitebid.constants.AppConstants;
 import com.stronghaul.sitebid.models.DistanceResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -40,7 +41,7 @@ public class DistanceService {
 		return new DistanceResponse(
 				origin,
 				destination,
-				element.path("distance").path("value").asDouble() / 1609.344,
+				element.path("distance").path("value").asDouble() / AppConstants.METERS_TO_MILES,
 				element.path("duration").path("text").asString());
 	}
 }

@@ -1,6 +1,7 @@
 package com.stronghaul.sitebid.services;
 
 import com.stronghaul.sitebid.configuration.GeositeConfig;
+import com.stronghaul.sitebid.constants.AppConstants;
 import com.stronghaul.sitebid.models.DistanceResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,17 +32,18 @@ public class DistanceServiceTest {
 
 	@Test
 	public void returnsDistanceAndDurationForI70BusinessLoop() {
-		assertDistance("2860 I-70BL, 81501", 1.7, "3 mins", 1.7 * 1609.344);
+		assertDistance("2860 I-70BL, 81501", 1.7, "3 mins", 1.7 * AppConstants.METERS_TO_MILES);
 	}
 
 	@Test
 	public void returnsDistanceAndDurationForSouth15thStreet() {
-		assertDistance("800 S 15th Street, 81501", 3.6, "8 mins", 3.6 * 1609.344);
+		assertDistance("800 S 15th Street, 81501", 3.6, "8 mins", 3.6 * AppConstants.METERS_TO_MILES);
 	}
 
 	@Test
 	public void returnsDistanceAndDurationForSouth15thStreet710() {
-		assertDistance("710 S 15th Street, 81501", 3.3, "8 mins", 3.3 * 1609.344);
+		assertDistance("710 S 15th Street, 81501", 3.3, "8 mins", 3.3 * AppConstants.METERS_TO_MILES
+		);
 	}
 
 	private void assertDistance(String destination, double expectedMiles, String expectedDuration,
