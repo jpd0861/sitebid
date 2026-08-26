@@ -41,7 +41,7 @@ public class DistanceServiceTest {
 
 	@Test
 	public void returnsDistanceAndDurationForSouth15thStreet710() {
-		assertDistance("710 S 15th Street, 81501", 3.4, "8 mins", 3.3 * 1609.344);
+		assertDistance("710 S 15th Street, 81501", 3.3, "8 mins", 3.3 * 1609.344);
 	}
 
 	private void assertDistance(String destination, double expectedMiles, String expectedDuration,
