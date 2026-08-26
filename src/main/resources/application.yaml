@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: sitebid
+
+geosite:
+  url: https://maps.googleapis.com/maps/api/distancematrix/json
