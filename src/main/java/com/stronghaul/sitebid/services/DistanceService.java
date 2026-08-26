@@ -33,7 +33,7 @@ public class DistanceService {
 
 		JsonNode element = Objects.requireNonNull(response, "Google geoservice returned an empty response")
 				.path("rows").path(0).path("elements").path(0);
-		if (!"OK".equals(element.path("status").asText())) {
+		if (!"OK".equals(element.path("status").asString())) {
 			throw new IllegalStateException("Google geoservice returned an invalid route response");
 		}
 
@@ -41,6 +41,6 @@ public class DistanceService {
 				origin,
 				destination,
 				element.path("distance").path("value").asDouble() / 1609.344,
-				element.path("duration").path("text").asText());
+				element.path("duration").path("text").asString());
 	}
 }
