@@ -1,6 +1,14 @@
 spring:
   application:
     name: sitebid
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=strong_haul_bid}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+
+postgres:
+  user-profile-table: ${DB_USER_PROFILE_TABLE:strong_haul_bid.user_profile}
 
 geosite:
   url: https://maps.googleapis.com/maps/api/distancematrix/json

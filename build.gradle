@@ -19,6 +19,17 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	runtimeOnly 'org.postgresql:postgresql'
+	// Spring Security (Required for BCrypt password hashing)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT Core API
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+
+    // JWT Implementation & JSON Parser (Only needed at runtime)
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
