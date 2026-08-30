@@ -2,7 +2,6 @@ package com.stronghaul.sitebid.services;
 
 import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
