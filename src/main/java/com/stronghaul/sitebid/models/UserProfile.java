@@ -12,6 +12,8 @@ public class UserProfile {
     private String email;
     private String passwordHash;
     private double profitPercentage;
+    private double hourlyRate;
+    private boolean subContractor = false;
     private java.time.LocalDateTime lastLogin;
 
     // Getters and Setters
@@ -69,6 +71,18 @@ public class UserProfile {
     }
     public void setProfitPercentage(double profitPercentage) {
         this.profitPercentage = profitPercentage;
+    }
+    public double getHourlyRate() {
+        return this.hourlyRate;
+    }
+    public void setHourlyRate(double hourlyRate) {
+        this.hourlyRate = hourlyRate;
+    }
+    public boolean isSubContractor() {
+        return this.subContractor;
+    }
+    public void setSubContractor(boolean subContractor) {
+        this.subContractor = subContractor;
     }
     public LocalDateTime getLastLogin() {
         return this.lastLogin;

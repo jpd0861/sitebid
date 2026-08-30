@@ -28,6 +28,7 @@ public class AuthController {
         user.setPhone(request.phone());
         user.setEmail(request.email());
         user.setProfitPercentage(request.profitPercentage());
+        user.setHourlyRate(request.hourlyRate());
 
         UserProfile registeredUser = authService.register(user, request.password());
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.from(registeredUser));
@@ -50,7 +51,8 @@ public class AuthController {
             String phone,
             String email,
             String password,
-            double profitPercentage) {
+            double profitPercentage,
+            double hourlyRate) {
     }
 
     public record LoginRequest(String email, String password) {

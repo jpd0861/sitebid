@@ -6,8 +6,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -23,26 +27,73 @@ public class PostgresDbService {
     }
 
     public Optional<UserProfile> findUserByEmail(String email) {
-        String sql = "SELECT id, is_active, company, first_name, last_name, phone, email, "
-                + "password_hash, profit_percentage, last_login FROM " + postgresConfig.getUserProfileTable()
-                + " WHERE lower(email) = lower(?)";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, this::mapUserProfile, email));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+        final UserProfile[] result = new UserProfile[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall("{ CALL strong_haul_bid.userProfile_getByEmail(?) }")) {
+                callableStatement.setString(1, email);
+                ResultSet resultSet = callableStatement.executeQuery();
+                if (resultSet.next()) {
+                    result[0] = mapUserProfile(resultSet, 1);
+                }
+                return null;
+            }
+        });
+
+        return Optional.ofNullable(result[0]);
     }
 
     public UserProfile saveUser(UserProfile user) {
-        String sql = "INSERT INTO " + postgresConfig.getUserProfileTable()
-                + " (is_active, company, first_name, last_name, phone, email, password_hash, "
-                + "profit_percentage, last_login) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
-        Long id = jdbcTemplate.queryForObject(sql, Long.class,
-                user.isActive(), user.getCompany(), user.getFirstName(), user.getLastName(),
-                user.getPhone(), user.getEmail(), user.getPasswordHash(), user.getProfitPercentage(),
-                user.getLastLogin());
-        user.setId(id);
+        Long userProfileId = insertUserProfile(user);
+        user.setId(userProfileId);
+        insertUserCrew(userProfileId, user);
         return user;
+    }
+
+    private Long insertUserProfile(UserProfile user) {
+        final String procedureCall = "CALL strong_haul_bid.userprofile_insert(?, ?, ?, ?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setString(1, user.getCompany());
+                callableStatement.setString(2, user.getFirstName());
+                callableStatement.setString(3, user.getLastName());
+                callableStatement.setString(4, user.getPhone());
+                callableStatement.setString(5, user.getEmail());
+                callableStatement.setString(6, user.getPasswordHash());
+                callableStatement.setBigDecimal(7, BigDecimal.valueOf(user.getProfitPercentage()));
+                callableStatement.setInt(8, 0);
+                callableStatement.registerOutParameter(8, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(8);
+                return null;
+            }
+        });
+
+        return generatedId[0];
+    }
+
+    private Long insertUserCrew(Long userProfileId, UserProfile user) {
+        final String procedureCall = "CALL strong_haul_bid.usercrew_insert(?, ?, ?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, userProfileId.intValue());
+                callableStatement.setString(2, user.getFirstName());
+                callableStatement.setString(3, user.getLastName());
+                callableStatement.setBigDecimal(4, BigDecimal.valueOf(user.getHourlyRate()));
+                callableStatement.setBoolean(5, user.isSubContractor());
+                callableStatement.setBigDecimal(6, BigDecimal.valueOf(user.getProfitPercentage()));
+                callableStatement.setInt(7, 0);
+                callableStatement.registerOutParameter(7, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(7);
+                return null;
+            }
+        });
+        return generatedId[0];
     }
 
     public void updateLastLogin(Long userId, LocalDateTime lastLogin) {
