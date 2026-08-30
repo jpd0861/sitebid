@@ -3,6 +3,7 @@ package com.stronghaul.sitebid.services;
 import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.Customer;
+import com.stronghaul.sitebid.models.JobBid;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -117,7 +118,7 @@ public class PostgresDbService {
         return user;
     }
 
-    private Long insertAddress(Address address) {
+    public Long insertAddress(Address address) {
         final String procedureCall = "CALL strong_haul_bid.address_insert(?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
@@ -166,5 +167,32 @@ public class PostgresDbService {
         customer.setId(customerId);
         customer.setAddressId(addressId);
         return customer;
+    }
+
+    private Long insertBid(JobBid bid) {
+        final String procedureCall = "CALL strong_haul_bid.userBid_insert(?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, bid.getUserProfileId().intValue());
+                callableStatement.setInt(2, bid.getUserCustomerId().intValue());
+                callableStatement.setInt(3, bid.getAddressId().intValue());
+                callableStatement.setString(4, bid.getScopeOfWork());
+                callableStatement.setInt(5, 0);
+                callableStatement.registerOutParameter(5, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(5);
+                return null;
+            }
+        });
+
+        return generatedId[0];
+    }
+
+    public JobBid saveBid(JobBid bid) {
+        Long bidId = insertBid(bid);
+        bid.setId(bidId);
+        return bid;
     }
 }
