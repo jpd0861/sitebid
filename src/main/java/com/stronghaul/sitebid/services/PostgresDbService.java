@@ -1,6 +1,8 @@
 package com.stronghaul.sitebid.services;
 
 import com.stronghaul.sitebid.models.UserProfile;
+import com.stronghaul.sitebid.models.Address;
+import com.stronghaul.sitebid.models.Customer;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -113,5 +115,56 @@ public class PostgresDbService {
         user.setProfitPercentage(resultSet.getDouble("profit_percentage"));
         user.setLastLogin(resultSet.getObject("last_login", LocalDateTime.class));
         return user;
+    }
+
+    private Long insertAddress(Address address) {
+        final String procedureCall = "CALL strong_haul_bid.address_insert(?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setString(1, address.getStreet());
+                callableStatement.setString(2, address.getZip());
+                callableStatement.setInt(3, 0);
+                callableStatement.registerOutParameter(3, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(3);
+                return null;
+            }
+        });
+
+        return generatedId[0];
+    }
+
+    private Long insertCustomer(Long userProfileId, Customer customer, Long addressId) {
+        final String procedureCall = "CALL strong_haul_bid.userCustomer_insert(?, ?, ?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, userProfileId.intValue());
+                callableStatement.setString(2, customer.getFirstName());
+                callableStatement.setString(3, customer.getLastName());
+                callableStatement.setString(4, customer.getPhone());
+                callableStatement.setString(5, customer.getEmail());
+                callableStatement.setInt(6, addressId.intValue());
+                callableStatement.setInt(7, 0);
+                callableStatement.registerOutParameter(7, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(7);
+                return null;
+            }
+        });
+
+        return generatedId[0];
+    }
+
+    public Customer saveCustomer(Long userProfileId, Customer customer, Address address) {
+        Long addressId = insertAddress(address);
+        address.setId(addressId);
+        Long customerId = insertCustomer(userProfileId, customer, addressId);
+        customer.setId(customerId);
+        customer.setAddressId(addressId);
+        return customer;
     }
 }
