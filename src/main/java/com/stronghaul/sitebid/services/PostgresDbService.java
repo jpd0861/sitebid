@@ -13,6 +13,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class PostgresDbService {
     }
 
     private Long insertUserProfile(UserProfile user) {
-        final String procedureCall = "CALL strong_haul_bid.userprofile_insert(?, ?, ?, ?, ?, ?, ?, ?)";
+        final String procedureCall = "CALL strong_haul_bid.user_profile_insert(?, ?, ?, ?, ?, ?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
         jdbcTemplate.execute((Connection connection) -> {
@@ -138,7 +139,7 @@ public class PostgresDbService {
     }
 
     private Long insertCustomer(Long userProfileId, Customer customer, Long addressId) {
-        final String procedureCall = "CALL strong_haul_bid.userCustomer_insert(?, ?, ?, ?, ?, ?, ?)";
+        final String procedureCall = "CALL strong_haul_bid.user_customer_insert(?, ?, ?, ?, ?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
         jdbcTemplate.execute((Connection connection) -> {
@@ -170,19 +171,22 @@ public class PostgresDbService {
     }
 
     private Long insertBid(JobBid bid) {
-        final String procedureCall = "CALL strong_haul_bid.userBid_insert(?, ?, ?, ?, ?)";
+        final String procedureCall = "CALL strong_haul_bid.user_bid_insert(?, ?, ?, ?, ?, ?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
         jdbcTemplate.execute((Connection connection) -> {
             try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
                 callableStatement.setInt(1, bid.getUserProfileId().intValue());
                 callableStatement.setInt(2, bid.getUserCustomerId().intValue());
-                callableStatement.setInt(3, bid.getAddressId().intValue());
-                callableStatement.setString(4, bid.getScopeOfWork());
-                callableStatement.setInt(5, 0);
-                callableStatement.registerOutParameter(5, Types.INTEGER);
+                callableStatement.setInt(3, bid.getBidStatusId().intValue());
+                callableStatement.setInt(4, bid.getAddressId().intValue());
+                callableStatement.setString(5, bid.getScopeOfWork());
+                callableStatement.setBigDecimal(6, bid.getProfitPercentageOverride());
+                callableStatement.setTimestamp(7, Timestamp.valueOf(bid.getDateOfBid()));
+                callableStatement.setInt(8, 0);
+                callableStatement.registerOutParameter(8, Types.INTEGER);
                 callableStatement.execute();
-                generatedId[0] = (long) callableStatement.getInt(5);
+                generatedId[0] = (long) callableStatement.getInt(8);
                 return null;
             }
         });

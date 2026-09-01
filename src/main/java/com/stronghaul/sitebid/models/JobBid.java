@@ -1,5 +1,8 @@
 package com.stronghaul.sitebid.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class JobBid {
@@ -9,6 +12,8 @@ public class JobBid {
     private Long addressId;
     private Long bidStatusId;
     private String scopeOfWork;
+    private BigDecimal profitPercentageOverride;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
     private LocalDateTime dateOfBid;
 
     // Getters and Setters
@@ -58,6 +63,14 @@ public class JobBid {
 
     public void setScopeOfWork(String scopeOfWork) {
         this.scopeOfWork = scopeOfWork;
+    }
+
+    public BigDecimal getProfitPercentageOverride() {
+        return this.profitPercentageOverride;
+    }
+
+    public void setProfitPercentageOverride(BigDecimal profitPercentageOverride) {
+        this.profitPercentageOverride = profitPercentageOverride;
     }
 
     public LocalDateTime getDateOfBid() {

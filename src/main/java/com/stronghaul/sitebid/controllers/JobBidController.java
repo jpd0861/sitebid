@@ -1,5 +1,6 @@
 package com.stronghaul.sitebid.controllers;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stronghaul.sitebid.models.JobBid;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.services.PostgresDbService;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/bid")
@@ -33,6 +36,9 @@ public class JobBidController {
         bid.setUserCustomerId(request.userCustomerId());
         bid.setAddressId(addressId);
         bid.setScopeOfWork(request.scopeOfWork());
+        bid.setProfitPercentageOverride(request.profitPercentageOverride());
+        bid.setBidStatusId(request.bidStatusId());
+        bid.setDateOfBid(request.dateOfBid());
 
         JobBid savedBid = postgresDbService.saveBid(bid);
 
@@ -42,9 +48,12 @@ public class JobBidController {
     public record SaveBidRequest(
             Long userProfileId,
             Long userCustomerId,
+            Long bidStatusId,
             String street,
             String zip,
-            String scopeOfWork) {
+            String scopeOfWork,
+            BigDecimal profitPercentageOverride,
+            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime dateOfBid) {
     }
 
     public record JobBidResponse(
@@ -53,7 +62,8 @@ public class JobBidController {
             Long userCustomerId,
             Long addressId,
             String scopeOfWork,
-            java.time.LocalDateTime dateOfBid) {
+            Long bidStatusId,
+            LocalDateTime dateOfBid) {
 
         private static JobBidResponse from(JobBid bid) {
             return new JobBidResponse(
@@ -62,6 +72,7 @@ public class JobBidController {
                     bid.getUserCustomerId(),
                     bid.getAddressId(),
                     bid.getScopeOfWork(),
+                    bid.getBidStatusId(),
                     bid.getDateOfBid());
         }
     }
