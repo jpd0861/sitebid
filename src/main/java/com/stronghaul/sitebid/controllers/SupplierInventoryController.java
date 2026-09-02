@@ -1,8 +1,5 @@
 package com.stronghaul.sitebid.controllers;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,11 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.stronghaul.sitebid.controllers.JobBidController.JobBidResponse;
-import com.stronghaul.sitebid.controllers.JobBidController.SaveBidRequest;
-import com.stronghaul.sitebid.models.Address;
-import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.sitebid.services.PostgresDbService;
 
