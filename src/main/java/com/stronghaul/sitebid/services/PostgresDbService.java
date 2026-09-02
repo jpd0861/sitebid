@@ -4,6 +4,7 @@ import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.Customer;
 import com.stronghaul.sitebid.models.JobBid;
+import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -198,5 +199,30 @@ public class PostgresDbService {
         Long bidId = insertBid(bid);
         bid.setId(bidId);
         return bid;
+    }
+
+    private Long insertSupplierInventoryCategory(SupplierInventoryCategory supplierCategory) {
+        final String procedureCall = "CALL strong_haul_bid.supplier_inventory_category_insert(?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setString(1, supplierCategory.getCategoryName());
+                callableStatement.setString(2, supplierCategory.getDescription());
+                callableStatement.setInt(3, 0);
+                callableStatement.registerOutParameter(3, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(3);
+                return null;
+            }
+        });
+
+        return generatedId[0];
+    }
+
+    public SupplierInventoryCategory saveSupplierInventoryCategory(SupplierInventoryCategory supplierInventoryCategory) {
+        Long supplierCategoryId = insertSupplierInventoryCategory(supplierInventoryCategory);
+        supplierInventoryCategory.setId(supplierCategoryId);
+        return supplierInventoryCategory;
     }
 }
