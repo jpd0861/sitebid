@@ -3,7 +3,7 @@ package com.stronghaul.sitebid.services;
 import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.Customer;
-import com.stronghaul.sitebid.models.JobBid;
+import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -171,7 +171,7 @@ public class PostgresDbService {
         return customer;
     }
 
-    private Long insertBid(JobBid bid) {
+    private Long insertBid(UserBid bid) {
         final String procedureCall = "CALL strong_haul_bid.user_bid_insert(?, ?, ?, ?, ?, ?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
@@ -195,7 +195,7 @@ public class PostgresDbService {
         return generatedId[0];
     }
 
-    public JobBid saveBid(JobBid bid) {
+    public UserBid saveBid(UserBid bid) {
         Long bidId = insertBid(bid);
         bid.setId(bidId);
         return bid;

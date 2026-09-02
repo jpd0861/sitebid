@@ -1,7 +1,7 @@
 package com.stronghaul.sitebid.controllers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.stronghaul.sitebid.models.JobBid;
+import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.services.PostgresDbService;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class JobBidController {
 
         Long addressId = postgresDbService.insertAddress(address);
 
-        JobBid bid = new JobBid();
+        UserBid bid = new UserBid();
         bid.setUserProfileId(request.userProfileId());
         bid.setUserCustomerId(request.userCustomerId());
         bid.setAddressId(addressId);
@@ -40,7 +40,7 @@ public class JobBidController {
         bid.setBidStatusId(request.bidStatusId());
         bid.setDateOfBid(request.dateOfBid());
 
-        JobBid savedBid = postgresDbService.saveBid(bid);
+        UserBid savedBid = postgresDbService.saveBid(bid);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(JobBidResponse.from(savedBid));
     }
@@ -65,7 +65,7 @@ public class JobBidController {
             Long bidStatusId,
             LocalDateTime dateOfBid) {
 
-        private static JobBidResponse from(JobBid bid) {
+        private static JobBidResponse from(UserBid bid) {
             return new JobBidResponse(
                     bid.getId(),
                     bid.getUserProfileId(),

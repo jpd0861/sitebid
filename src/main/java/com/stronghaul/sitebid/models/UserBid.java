@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class JobBid {
+public class UserBid {
     private Long id;
     private Long userProfileId;
     private Long userCustomerId;

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stronghaul.sitebid.controllers.JobBidController.JobBidResponse;
 import com.stronghaul.sitebid.controllers.JobBidController.SaveBidRequest;
 import com.stronghaul.sitebid.models.Address;
-import com.stronghaul.sitebid.models.JobBid;
+import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.sitebid.services.PostgresDbService;
 
