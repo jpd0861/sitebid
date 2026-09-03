@@ -8,6 +8,7 @@ public class UserCrew {
     double hourlyRate;
     boolean isSubContractor;
     double overheadPercentage;
+    boolean isActive;
 
     public Long getId() {
         return id;
@@ -50,5 +51,11 @@ public class UserCrew {
     }
     public void setOverheadPercentage(double overheadPercentage) {
         this.overheadPercentage = overheadPercentage;
+    }
+    public boolean isActive() {
+        return isActive;
+    }
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

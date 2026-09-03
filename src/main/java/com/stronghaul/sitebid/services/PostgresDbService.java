@@ -4,7 +4,9 @@ import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.Customer;
 import com.stronghaul.sitebid.models.UserBid;
+import com.stronghaul.sitebid.models.UserCrew;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
+import com.stronghaul.map.UserCrewDto;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -224,5 +227,71 @@ public class PostgresDbService {
         Long supplierCategoryId = insertSupplierInventoryCategory(supplierInventoryCategory);
         supplierInventoryCategory.setId(supplierCategoryId);
         return supplierInventoryCategory;
+    }
+
+    public ArrayList<UserCrew> getUserCrewsByUserProfileId(Long userProfileId, Long crewId) {
+        final ArrayList<UserCrew> userCrews = new ArrayList<>();
+        UserCrewDto userCrewDto = new UserCrewDto();
+
+        jdbcTemplate.execute((Connection connection) -> {
+            
+            try (CallableStatement callableStatement = connection.prepareCall("{ CALL strong_haul_bid.usercrew_getByUserProfileId(?, ?) }")) {
+                callableStatement.setInt(1, userProfileId.intValue());
+                callableStatement.setInt(2, userProfileId.intValue());
+                ResultSet resultSet = callableStatement.executeQuery();
+                userCrews.addAll(userCrewDto.map(resultSet));
+                return userCrews;
+            }
+        });
+
+        return userCrews;
+    }
+
+    private Long insertUserCrew(Long userProfileId, UserCrew userCrew) {
+        final String procedureCall = "CALL strong_haul_bid.usercrew_insert(?, ?, ?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, userProfileId.intValue());
+                callableStatement.setString(2, userCrew.getFirstName());
+                callableStatement.setString(3, userCrew.getLastName());
+                callableStatement.setBigDecimal(4, BigDecimal.valueOf(userCrew.getHourlyRate()));
+                callableStatement.setBoolean(5, userCrew.isSubContractor());
+                callableStatement.setBigDecimal(6, BigDecimal.valueOf(userCrew.getOverheadPercentage()));
+                callableStatement.setBoolean(7, userCrew.isActive());
+                callableStatement.setInt(8, 0);
+                callableStatement.registerOutParameter(8, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(8);
+                return null;
+            }
+        });
+        return generatedId[0];
+    }
+
+    public UserCrew saveUserCrew(Long userProfileId, UserCrew userCrew) {
+        Long userCrewId = insertUserCrew(userProfileId, userCrew);
+        userCrew.setId(userCrewId);
+        return userCrew;
+    }
+
+    public UserCrew updateUserCrew(Long userProfileId, UserCrew userCrew) {
+        final String procedureCall = "CALL strong_haul_bid.user_crew_update(?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, userCrew.getId().intValue());
+                callableStatement.setInt(2, userProfileId.intValue());
+                callableStatement.setString(3, userCrew.getFirstName());
+                callableStatement.setString(4, userCrew.getLastName());
+                callableStatement.setBigDecimal(5, BigDecimal.valueOf(userCrew.getHourlyRate()));
+                callableStatement.setBoolean(6, userCrew.isSubContractor());
+                callableStatement.setBigDecimal(7, BigDecimal.valueOf(userCrew.getOverheadPercentage()));
+                callableStatement.setBoolean(8, userCrew.isActive());
+                callableStatement.execute();
+                return null;
+            }
+        });
+        return userCrew;
     }
 }
