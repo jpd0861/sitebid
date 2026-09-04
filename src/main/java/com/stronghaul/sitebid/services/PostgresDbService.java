@@ -5,11 +5,13 @@ import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.Customer;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserCrew;
+import com.stronghaul.sitebid.models.UserCustomer;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.map.UserCrewDto;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import com.stronghaul.map.UserCustomerDto;
 
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
@@ -293,5 +295,68 @@ public class PostgresDbService {
             }
         });
         return userCrew;
+    }
+
+    public ArrayList<UserCustomer> getUserCustomerByUserProfileId(Long userProfileId, Long customerId) {
+        final ArrayList<UserCustomer> userCustomers = new ArrayList<>();
+        UserCustomerDto userCustomerDto = new UserCustomerDto();
+
+        jdbcTemplate.execute((Connection connection) -> {
+            
+            try (CallableStatement callableStatement = connection.prepareCall("{ CALL strong_haul_bid.user_customer_get(?, ?) }")) {
+                callableStatement.setInt(1, userProfileId.intValue());
+                callableStatement.setInt(2, customerId.intValue());
+                ResultSet resultSet = callableStatement.executeQuery();
+                userCustomers.addAll(userCustomerDto.map(resultSet));
+                return userCustomers;
+            }
+        });
+
+        return userCustomers;
+    }
+
+    private Long insertUserCustomer(Long userProfileId, UserCustomer userCustomer) {
+        final String procedureCall = "CALL strong_haul_bid.user_customer_insert(?, ?, ?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, userProfileId.intValue());
+                callableStatement.setString(2, userCustomer.getFirstName());
+                callableStatement.setString(3, userCustomer.getLastName());
+                callableStatement.setString(4, userCustomer.getPhone());
+                callableStatement.setString(5, userCustomer.getEmail());
+                callableStatement.setInt(6, 0);
+                callableStatement.registerOutParameter(6, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(6);
+                return null;
+            }
+        });
+        return generatedId[0];
+    }
+
+    public UserCustomer saveUserCustomer(Long userProfileId, UserCustomer userCustomer) {
+        Long id = insertUserCustomer(userProfileId, userCustomer);
+        userCustomer.setId(id);
+        return userCustomer;
+    }
+
+    public UserCustomer updateUserCustomer(Long userProfileId, UserCustomer userCustomer) {
+        final String procedureCall = "CALL strong_haul_bid.user_customer_update(?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, userProfileId.intValue());
+                callableStatement.setInt(2, userCustomer.getId().intValue());
+                callableStatement.setString(3, userCustomer.getFirstName());
+                callableStatement.setString(4, userCustomer.getLastName());
+                callableStatement.setString(5, userCustomer.getPhone());
+                callableStatement.setString(6, userCustomer.getEmail());
+                callableStatement.setInt(7, userCustomer.getAddressId().intValue());
+                callableStatement.execute();
+                return null;
+            }
+        });
+        return userCustomer;
     }
 }
