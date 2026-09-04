@@ -235,9 +235,9 @@ public class PostgresDbService {
 
         jdbcTemplate.execute((Connection connection) -> {
             
-            try (CallableStatement callableStatement = connection.prepareCall("{ CALL strong_haul_bid.usercrew_getByUserProfileId(?, ?) }")) {
+            try (CallableStatement callableStatement = connection.prepareCall("{ CALL strong_haul_bid.user_crew_get(?, ?) }")) {
                 callableStatement.setInt(1, userProfileId.intValue());
-                callableStatement.setInt(2, userProfileId.intValue());
+                callableStatement.setInt(2, crewId.intValue());
                 ResultSet resultSet = callableStatement.executeQuery();
                 userCrews.addAll(userCrewDto.map(resultSet));
                 return userCrews;
@@ -248,7 +248,7 @@ public class PostgresDbService {
     }
 
     private Long insertUserCrew(Long userProfileId, UserCrew userCrew) {
-        final String procedureCall = "CALL strong_haul_bid.usercrew_insert(?, ?, ?, ?, ?, ?, ?)";
+        final String procedureCall = "CALL strong_haul_bid.user_crew_insert(?, ?, ?, ?, ?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
         jdbcTemplate.execute((Connection connection) -> {
@@ -280,8 +280,8 @@ public class PostgresDbService {
         final String procedureCall = "CALL strong_haul_bid.user_crew_update(?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.execute((Connection connection) -> {
             try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
-                callableStatement.setInt(1, userCrew.getId().intValue());
-                callableStatement.setInt(2, userProfileId.intValue());
+                callableStatement.setInt(1, userProfileId.intValue());
+                callableStatement.setInt(2, userCrew.getId().intValue());
                 callableStatement.setString(3, userCrew.getFirstName());
                 callableStatement.setString(4, userCrew.getLastName());
                 callableStatement.setBigDecimal(5, BigDecimal.valueOf(userCrew.getHourlyRate()));
