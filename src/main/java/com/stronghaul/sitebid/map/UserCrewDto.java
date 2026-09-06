@@ -8,11 +8,9 @@ import java.util.ArrayList;
 public class UserCrewDto {
     private ArrayList<UserCrew> userCrews;
 
-    public UserCrewDto() {
-        this.userCrews = new ArrayList<UserCrew>();
-    }
 
     public ArrayList<UserCrew> map(ResultSet resultSet) throws SQLException {
+        this.userCrews = new ArrayList<UserCrew>();
         while (resultSet.next()) {
             UserCrew userCrew = new UserCrew();
             userCrew.setId(resultSet.getLong("id"));

@@ -9,11 +9,8 @@ import com.stronghaul.sitebid.models.UserCustomer;
 public class UserCustomerDto {
     private ArrayList<UserCustomer> userCustomers;
 
-    public UserCustomerDto() {
-        this.userCustomers = new ArrayList<UserCustomer>();
-    }
-
     public ArrayList<UserCustomer> map(ResultSet resultSet) throws SQLException {
+        this.userCustomers = new ArrayList<UserCustomer>();
         while (resultSet.next()) {
             UserCustomer userCustomer = new UserCustomer();
             userCustomer.setId(resultSet.getLong("id"));
