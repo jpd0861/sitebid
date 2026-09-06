@@ -2,7 +2,7 @@ package com.stronghaul.sitebid.map;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import com.stronghaul.map.UserCrewDto;
+import com.stronghaul.sitebid.map.UserCrewDto;
 import com.stronghaul.sitebid.models.UserCrew;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -7,11 +7,12 @@ import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserCrew;
 import com.stronghaul.sitebid.models.UserCustomer;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
-import com.stronghaul.map.UserCrewDto;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
+import com.stronghaul.sitebid.map.UserCrewDto;
+import com.stronghaul.sitebid.map.UserCustomerDto;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import com.stronghaul.map.UserCustomerDto;
 
 import java.math.BigDecimal;
 import java.sql.CallableStatement;

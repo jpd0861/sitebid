@@ -1,4 +1,4 @@
-package com.stronghaul.map;
+package com.stronghaul.sitebid.map;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

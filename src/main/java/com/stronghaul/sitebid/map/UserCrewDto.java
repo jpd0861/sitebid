@@ -1,4 +1,4 @@
-package com.stronghaul.map;
+package com.stronghaul.sitebid.map;
 
 import com.stronghaul.sitebid.models.UserCrew;
 import java.sql.ResultSet;
