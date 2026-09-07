@@ -3,10 +3,10 @@ package com.stronghaul.sitebid.models;
 public class UserBidLineItem {
     private Long id;
     private Long userBidId;
-    private Long lineItemId;
     private String description;
     private double amount;
     private double quantity;
+    private LineItemCategory lineItemCategory = new LineItemCategory();
 
     // Getters and Setters
     public Long getId() {
@@ -23,14 +23,6 @@ public class UserBidLineItem {
 
     public void setUserBidId(Long userBidId) {
         this.userBidId = userBidId;
-    }
-
-    public Long getLineItemId() {
-        return lineItemId;
-    }
-
-    public void setLineItemId(Long lineItemId) {
-        this.lineItemId = lineItemId;
     }
 
     public String getDescription() {
@@ -55,5 +47,13 @@ public class UserBidLineItem {
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+    }
+
+    public LineItemCategory getLineItemCategory() {
+        return lineItemCategory;
+    }
+
+    public void setLineItemCategory(LineItemCategory lineItemCategory) {
+        this.lineItemCategory = lineItemCategory;
     }
 }

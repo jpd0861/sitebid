@@ -7,7 +7,7 @@ public class UserCustomer {
     private String lastName;
     private String phone;
     private String email;
-    private Long addressId;
+    private Address address = new Address();
 
     // Getters and Setters
     public Long getId() {
@@ -58,11 +58,11 @@ public class UserCustomer {
         this.email = email;
     }
 
-    public Long getAddressId() {
-        return addressId;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

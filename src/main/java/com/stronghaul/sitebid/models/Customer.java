@@ -1,13 +1,13 @@
 package com.stronghaul.sitebid.models;
 
 public class Customer {
-    private Long id;
-    private Long userProfileId;
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private String email;
-    private Long addressId;
+    private Long id = 0L;
+    private Long userProfileId = 0L;
+    private String firstName = "";
+    private String lastName = "";
+    private String phone = "";
+    private String email = "";
+    private Long addressId = 0L;
 
     // Getters and Setters
     public Long getId() {

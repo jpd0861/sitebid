@@ -3,7 +3,7 @@ package com.stronghaul.sitebid.models;
 public class UserBidLineItemCrew {
     private Long id;
     private Long userBidId;
-    private Long userCrewId;
+    private UserCrew userCrew = new UserCrew();
     private String description;
     private double hours;
 
@@ -24,12 +24,12 @@ public class UserBidLineItemCrew {
         this.userBidId = userBidId;
     }
 
-    public Long getUserCrewId() {
-        return userCrewId;
+    public UserCrew getUserCrew() {
+        return userCrew;
     }
 
-    public void setUserCrewId(Long userCrewId) {
-        this.userCrewId = userCrewId;
+    public void setUserCrew(UserCrew userCrew) {
+        this.userCrew = userCrew;
     }
 
     public String getDescription() {

@@ -19,7 +19,9 @@ public class UserCustomerDto {
             userCustomer.setLastName(resultSet.getString("last_name"));
             userCustomer.setPhone(resultSet.getString("phone"));
             userCustomer.setEmail(resultSet.getString("email"));
-            userCustomer.setAddressId(resultSet.getLong("address_id"));
+            userCustomer.getAddress().setId(resultSet.getLong("address_id"));
+            userCustomer.getAddress().setStreet(resultSet.getString("street"));
+            userCustomer.getAddress().setZip(resultSet.getString("zip"));
             userCustomers.add(userCustomer);
         }
         return userCustomers;

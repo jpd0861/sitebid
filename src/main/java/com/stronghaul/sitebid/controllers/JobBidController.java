@@ -2,7 +2,10 @@ package com.stronghaul.sitebid.controllers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stronghaul.sitebid.models.UserBid;
+import com.stronghaul.sitebid.models.UserCustomer;
+import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.models.Address;
+import com.stronghaul.sitebid.models.BidStatus;
 import com.stronghaul.sitebid.services.PostgresDbService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +33,15 @@ public class JobBidController {
         address.setZip(request.zip());
 
         Long addressId = postgresDbService.insertAddress(address);
+        address.setId(addressId);
 
         UserBid bid = new UserBid();
-        bid.setUserProfileId(request.userProfileId());
-        bid.setUserCustomerId(request.userCustomerId());
-        bid.setAddressId(addressId);
+        bid.setUserProfile(request.userProfile());
+        bid.setUserCustomer(request.userCustomer());
+        bid.setAddress(address);
         bid.setScopeOfWork(request.scopeOfWork());
         bid.setProfitPercentageOverride(request.profitPercentageOverride());
-        bid.setBidStatusId(request.bidStatusId());
+        bid.setBidStatus(request.bidStatus());
         bid.setDateOfBid(request.dateOfBid());
 
         UserBid savedBid = postgresDbService.saveBid(bid);
@@ -46,9 +50,9 @@ public class JobBidController {
     }
 
     public record SaveBidRequest(
-            Long userProfileId,
-            Long userCustomerId,
-            Long bidStatusId,
+            UserProfile userProfile,
+            UserCustomer userCustomer,
+            BidStatus bidStatus,
             String street,
             String zip,
             String scopeOfWork,
@@ -58,21 +62,21 @@ public class JobBidController {
 
     public record JobBidResponse(
             Long id,
-            Long userProfileId,
-            Long userCustomerId,
-            Long addressId,
+            UserProfile userProfile,
+            UserCustomer userCustomer,
+            Address address,
             String scopeOfWork,
-            Long bidStatusId,
+            BidStatus bidStatus,
             LocalDateTime dateOfBid) {
 
         private static JobBidResponse from(UserBid bid) {
             return new JobBidResponse(
                     bid.getId(),
-                    bid.getUserProfileId(),
-                    bid.getUserCustomerId(),
-                    bid.getAddressId(),
+                    bid.getUserProfile(),
+                    bid.getUserCustomer(),
+                    bid.getAddress(),
                     bid.getScopeOfWork(),
-                    bid.getBidStatusId(),
+                    bid.getBidStatus(),
                     bid.getDateOfBid());
         }
     }

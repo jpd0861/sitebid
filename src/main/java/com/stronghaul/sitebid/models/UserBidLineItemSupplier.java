@@ -3,7 +3,6 @@ package com.stronghaul.sitebid.models;
 public class UserBidLineItemSupplier {
     private Long id;
     private Long userBidId;
-    private Long suppierInventoryCategoryId;
     private String description;
     private double amount;
     private double quantity;
@@ -25,14 +24,6 @@ public class UserBidLineItemSupplier {
 
     public void setUserBidId(Long userBidId) {
         this.userBidId = userBidId;
-    }
-
-    public Long getSupplierInventoryCategoryId() {
-        return suppierInventoryCategoryId;
-    }
-
-    public void setSupplierInventoryCategoryId(Long supplierInventoryCategoryId) {
-        this.suppierInventoryCategoryId = supplierInventoryCategoryId;
     }
 
     public String getDescription() {

@@ -183,10 +183,10 @@ public class PostgresDbService {
 
         jdbcTemplate.execute((Connection connection) -> {
             try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
-                callableStatement.setInt(1, bid.getUserProfileId().intValue());
-                callableStatement.setInt(2, bid.getUserCustomerId().intValue());
-                callableStatement.setInt(3, bid.getBidStatusId().intValue());
-                callableStatement.setInt(4, bid.getAddressId().intValue());
+                callableStatement.setInt(1, bid.getUserProfile().getId().intValue());
+                callableStatement.setInt(2, bid.getUserCustomer().getId().intValue());
+                callableStatement.setInt(3, bid.getBidStatus().getId().intValue());
+                callableStatement.setInt(4, bid.getAddress().getId().intValue());
                 callableStatement.setString(5, bid.getScopeOfWork());
                 callableStatement.setBigDecimal(6, bid.getProfitPercentageOverride());
                 callableStatement.setTimestamp(7, Timestamp.valueOf(bid.getDateOfBid()));
@@ -353,7 +353,7 @@ public class PostgresDbService {
                 callableStatement.setString(4, userCustomer.getLastName());
                 callableStatement.setString(5, userCustomer.getPhone());
                 callableStatement.setString(6, userCustomer.getEmail());
-                callableStatement.setInt(7, userCustomer.getAddressId().intValue());
+                callableStatement.setInt(7, userCustomer.getAddress().getId().intValue());
                 callableStatement.execute();
                 return null;
             }

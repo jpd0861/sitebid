@@ -1,9 +1,9 @@
 package com.stronghaul.sitebid.models;
 
 public class Address {
-    private Long id;
-    private String street;
-    private String zip;
+    private Long id = 0L;
+    private String street = "";
+    private String zip = "";
 
     // Getters and Setters
     public Long getId() {

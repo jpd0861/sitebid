@@ -4,17 +4,22 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class UserBid {
     private Long id;
-    private Long userProfileId;
-    private Long userCustomerId;
-    private Long addressId;
-    private Long bidStatusId;
+    private UserCustomer userCustomer = new UserCustomer();
+    private UserProfile userProfile = new UserProfile();
+    private Address address = new Address();
+    private BidStatus bidStatus = new BidStatus();
+    private ArrayList<UserBidLineItem> userBidLineItems = new ArrayList<UserBidLineItem>();
+    private ArrayList<UserBidLineItemCrew> userBidLineItemCrews = new ArrayList<UserBidLineItemCrew>();
+    private ArrayList<UserBidLineItemSupplier> userBidLineItemSuppliers = new ArrayList<UserBidLineItemSupplier>();
     private String scopeOfWork;
     private BigDecimal profitPercentageOverride;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
     private LocalDateTime dateOfBid;
+    private StrongHaulSettings strongHaulSettings = new StrongHaulSettings();
 
     // Getters and Setters
     public Long getId() {
@@ -25,36 +30,60 @@ public class UserBid {
         this.id = id;
     }
 
-    public Long getUserProfileId() {
-        return this.userProfileId;
+    public UserCustomer getUserCustomer() {
+        return this.userCustomer;
     }
 
-    public void setUserProfileId(Long userProfileId) {
-        this.userProfileId = userProfileId;
+    public void setUserCustomer(UserCustomer userCustomer) {
+        this.userCustomer = userCustomer;
     }
 
-    public Long getUserCustomerId() {
-        return this.userCustomerId;
+    public UserProfile getUserProfile() {
+        return this.userProfile;
     }
 
-    public void setUserCustomerId(Long userCustomerId) {
-        this.userCustomerId = userCustomerId;
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 
-    public Long getAddressId() {
-        return this.addressId;
+    public Address getAddress() {
+        return this.address;
     }
 
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
-    public Long getBidStatusId() {
-        return this.bidStatusId;
+    public BidStatus getBidStatus() {
+        return this.bidStatus;
     }
 
-    public void setBidStatusId(Long bidStatusId) {
-        this.bidStatusId = bidStatusId;
+    public void setBidStatus(BidStatus bidStatus) {
+        this.bidStatus = bidStatus;
+    }
+
+    public ArrayList<UserBidLineItem> getUserBidLineItems() {
+        return this.userBidLineItems;
+    }
+
+    public ArrayList<UserBidLineItemCrew> getUserBidLineItemCrews() {
+        return this.userBidLineItemCrews;
+    }
+
+    public void setUserBidLineItemCrews(ArrayList<UserBidLineItemCrew> userBidLineItemCrews) {
+        this.userBidLineItemCrews = userBidLineItemCrews;
+    }
+
+    public void setUserBidLineItems(ArrayList<UserBidLineItem> userBidLineItems) {
+        this.userBidLineItems = userBidLineItems;
+    }
+
+    public ArrayList<UserBidLineItemSupplier> getUserBidLineItemSuppliers() {
+        return this.userBidLineItemSuppliers;
+    }
+
+    public void setUserBidLineItemSuppliers(ArrayList<UserBidLineItemSupplier> userBidLineItemSuppliers) {
+        this.userBidLineItemSuppliers = userBidLineItemSuppliers;
     }
 
     public String getScopeOfWork() {
@@ -79,5 +108,13 @@ public class UserBid {
 
     public void setDateOfBid(LocalDateTime dateOfBid) {
         this.dateOfBid = dateOfBid;
+    }
+
+    public StrongHaulSettings getStrongHaulSettings() {
+        return this.strongHaulSettings;
+    }
+
+    public void setStrongHaulSettings(StrongHaulSettings strongHaulSettings) {
+        this.strongHaulSettings = strongHaulSettings;
     }
 }
