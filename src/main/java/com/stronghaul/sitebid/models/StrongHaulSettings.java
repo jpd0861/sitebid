@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public class StrongHaulSettings {
     private Long id;
-    private BigDecimal ratePerMile;
-    private BigDecimal baseHookupFee;
-    private BigDecimal techPlatformFee;
-    private BigDecimal onlineTransactionFee;
-    private BigDecimal onlineTransactionPercentage;
+    private Double ratePerMile;
+    private Double baseHookupFee;
+    private Double techPlatformFee;
+    private Double onlineTransactionFee;
+    private Double onlineTransactionPercentage;
 
     // Getters and Setters
     public Long getId() {
@@ -18,43 +18,43 @@ public class StrongHaulSettings {
         this.id = id;
     }
 
-    public BigDecimal getRatePerMile() {
+    public Double getRatePerMile() {
         return ratePerMile;
     }
 
-    public void setRatePerMile(BigDecimal ratePerMile) {
+    public void setRatePerMile(Double ratePerMile) {
         this.ratePerMile = ratePerMile;
     }
 
-    public BigDecimal getBaseHookupFee() {
+    public Double getBaseHookupFee() {
         return baseHookupFee;
     }
 
-    public void setBaseHookupFee(BigDecimal baseHookupFee) {
+    public void setBaseHookupFee(Double baseHookupFee) {
         this.baseHookupFee = baseHookupFee;
     }
 
-    public BigDecimal getTechPlatformFee() {
+    public Double getTechPlatformFee() {
         return techPlatformFee;
     }
 
-    public void setTechPlatformFee(BigDecimal techPlatformFee) {
+    public void setTechPlatformFee(Double techPlatformFee) {
         this.techPlatformFee = techPlatformFee;
     }
 
-    public BigDecimal getOnlineTransactionFee() {
+    public Double getOnlineTransactionFee() {
         return onlineTransactionFee;
     }
 
-    public void setOnlineTransactionFee(BigDecimal onlineTransactionFee) {
+    public void setOnlineTransactionFee(Double onlineTransactionFee) {
         this.onlineTransactionFee = onlineTransactionFee;
     }
 
-    public BigDecimal getOnlineTransactionPercentage() {
+    public Double getOnlineTransactionPercentage() {
         return onlineTransactionPercentage;
     }
 
-    public void setOnlineTransactionPercentage(BigDecimal onlineTransactionPercentage) {
+    public void setOnlineTransactionPercentage(Double onlineTransactionPercentage) {
         this.onlineTransactionPercentage = onlineTransactionPercentage;
     }
 }

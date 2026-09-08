@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.BidStatus;
 import com.stronghaul.sitebid.models.LineItemCategory;
+import com.stronghaul.sitebid.models.StrongHaulSettings;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserBidLineItem;
 import com.stronghaul.sitebid.models.UserCustomer;
@@ -28,22 +29,22 @@ public class UserBidDto {
     }
 
     private void mapBidRootValues(UserBid bid, JsonNode root) {
-        JsonNode node = getJsonNode(root, "bid_id");
+        JsonNode node = getJsonNode(root, "id");
         if (node != null) {
             bid.setId(node.asLong());
         }
 
-        node = getJsonNode(root, "bid_scope_of_work");
+        node = getJsonNode(root, "scope_of_work");
         if (node != null) {
             bid.setScopeOfWork(node.asText());
         }
 
-        node = getJsonNode(root, "bid_profit_percentage_override");
+        node = getJsonNode(root, "profit_percentage_override");
         if (node != null) {
             bid.setProfitPercentageOverride(new BigDecimal(node.asText()));
         }
 
-        node = getJsonNode(root, "bid_date");
+        node = getJsonNode(root, "date_of_bid");
         if (node != null) {
             bid.setDateOfBid(LocalDateTime.parse(node.asText()));
         }
@@ -53,16 +54,16 @@ public class UserBidDto {
         JsonNode node = getJsonNode(root, "bidAddress");
         if (node != null) {
             Address address = new Address();
-            JsonNode addrNode = getJsonNode(node, "bid_addr_id");
+            JsonNode addrNode = getJsonNode(node, "id");
 
             if (addrNode != null) {
                 address.setId(addrNode.asLong());
             }
-            addrNode = getJsonNode(node, "bid_addr_street");
+            addrNode = getJsonNode(node, "street");
             if (addrNode != null) {
                 address.setStreet(addrNode.asText());
             }
-            addrNode = getJsonNode(node, "bid_addr_zip");
+            addrNode = getJsonNode(node, "zip");
             if (addrNode != null) {
                 address.setZip(addrNode.asText());
             }
@@ -74,11 +75,11 @@ public class UserBidDto {
         JsonNode node = getJsonNode(root, "bidStatus");
         if (node != null) {
             BidStatus bidStatus = new BidStatus();
-            JsonNode statusNode = getJsonNode(node, "bid_stat_id");
+            JsonNode statusNode = getJsonNode(node, "id");
             if (statusNode != null) {
                 bidStatus.setId(statusNode.asLong());
             }
-            statusNode = getJsonNode(node, "bid_stat_status");
+            statusNode = getJsonNode(node, "status");
             if (statusNode != null) {
                 bidStatus.setStatus(statusNode.asText());
             }
@@ -86,47 +87,81 @@ public class UserBidDto {
         }             
     }
 
+    private void mapStrongHaulSettings(UserBid bid, JsonNode root) {
+        JsonNode node = getJsonNode(root, "strongHaulSettings");
+        if (node != null) {
+            StrongHaulSettings strongHaulSetting = new StrongHaulSettings();
+            JsonNode strongHaulNode = getJsonNode(node, "id");
+            if (strongHaulNode != null) {
+                strongHaulSetting.setId(strongHaulNode.asLong());
+            }
+            strongHaulNode = getJsonNode(node, "rate_per_mile");
+            if (strongHaulNode != null) {
+                strongHaulSetting.setRatePerMile(strongHaulNode.asDouble());
+            }
+            strongHaulNode = getJsonNode(node, "base_hookup_fee");
+            if (strongHaulNode != null) {
+                strongHaulSetting.setBaseHookupFee(strongHaulNode.asDouble());
+            }
+            strongHaulNode = getJsonNode(node, "tech_platform_fee");
+            if (strongHaulNode != null) {
+                strongHaulSetting.setTechPlatformFee(strongHaulNode.asDouble());
+            }
+            strongHaulNode = getJsonNode(node, "online_transaction_fee");
+            if (strongHaulNode != null) {
+                strongHaulSetting.setOnlineTransactionFee(strongHaulNode.asDouble());
+            }
+            strongHaulNode = getJsonNode(node, "online_transaction_percentage");
+            if (strongHaulNode != null) {
+                strongHaulSetting.setOnlineTransactionPercentage(strongHaulNode.asDouble());
+            }
+            bid.setStrongHaulSettings(strongHaulSetting);
+        }
+    }
+
+
     private void mapUserCustomer(UserBid bid, JsonNode root) {
         JsonNode node = getJsonNode(root, "customer");
+        JsonNode addrNode = null;
         if (node != null) {
+            addrNode = getJsonNode(node, "address");
             UserCustomer userCustomer = new UserCustomer();
-            JsonNode customerNode = getJsonNode(node, "cust_id");
+            JsonNode customerNode = getJsonNode(node, "id");
             if (customerNode != null) {
                 userCustomer.setId(customerNode.asLong());
             }
-            customerNode = getJsonNode(node, "cust_first_name");
+            customerNode = getJsonNode(node, "first_name");
             if (customerNode != null) {
                 userCustomer.setFirstName(customerNode.asText());
             }
-            customerNode = getJsonNode(node, "cust_last_name");
+            customerNode = getJsonNode(node, "last_name");
             if (customerNode != null) {
                 userCustomer.setLastName(customerNode.asText());
             }
-            customerNode = getJsonNode(node, "cust_email");
+            customerNode = getJsonNode(node, "email");
             if (customerNode != null) {
                 userCustomer.setEmail(customerNode.asText());
             }
-            customerNode = getJsonNode(node, "cust_phone");
+            customerNode = getJsonNode(node, "phone");
             if (customerNode != null) {
                 userCustomer.setPhone(customerNode.asText());
             }
-            customerNode = getJsonNode(node, "cust_user_profile_id");
+            customerNode = getJsonNode(node, "user_profile_id");
             if (customerNode != null) {
                 userCustomer.setUserProfileId(customerNode.asLong());
             }
 
-            JsonNode addrNode = getJsonNode(node, "cust_address");
             if (addrNode != null) {
                 Address address = new Address();
-                JsonNode custAddrNode = getJsonNode(addrNode, "cust_addr_id");
+                JsonNode custAddrNode = getJsonNode(addrNode, "id");
                 if (custAddrNode != null) {
                     address.setId(custAddrNode.asLong());
                 }
-                custAddrNode = getJsonNode(addrNode, "cust_addr_street");
+                custAddrNode = getJsonNode(addrNode, "street");
                 if (custAddrNode != null) {
                     address.setStreet(custAddrNode.asText());
                 }
-                custAddrNode = getJsonNode(addrNode, "cust_addr_zip");
+                custAddrNode = getJsonNode(addrNode, "zip");
                 if (custAddrNode != null) {
                     address.setZip(custAddrNode.asText());
                 }
@@ -143,27 +178,27 @@ public class UserBidDto {
             for (JsonNode lineItemNode : node) {
                 UserBidLineItem lineItem = new UserBidLineItem();
 
-                JsonNode itemNode = getJsonNode(lineItemNode, "li_id");
+                JsonNode itemNode = getJsonNode(lineItemNode, "id");
                 if (itemNode != null) {
                     lineItem.setId(itemNode.asLong());
                 }
 
-                itemNode = getJsonNode(lineItemNode, "li_user_bid_id");
+                itemNode = getJsonNode(lineItemNode, "user_bid_id");
                 if (itemNode != null) {
                     lineItem.setUserBidId(itemNode.asLong());
                 }
 
-                itemNode = getJsonNode(lineItemNode, "li_amount");
+                itemNode = getJsonNode(lineItemNode, "amount");
                 if (itemNode != null) {
                     lineItem.setAmount(itemNode.asDouble());
                 }
 
-                itemNode = getJsonNode(lineItemNode, "li_quantity");
+                itemNode = getJsonNode(lineItemNode, "quantity");
                 if (itemNode != null) {
                     lineItem.setQuantity(itemNode.asDouble());
                 }
 
-                itemNode = getJsonNode(lineItemNode, "li_description");
+                itemNode = getJsonNode(lineItemNode, "description");
                 if (itemNode != null) {
                     lineItem.setDescription(itemNode.asText());
                 }
@@ -171,11 +206,11 @@ public class UserBidDto {
                 JsonNode categoryNode = getJsonNode(lineItemNode, "category");
                 if (categoryNode != null) {
                     LineItemCategory category = new LineItemCategory();
-                    JsonNode catNode = getJsonNode(categoryNode, "li_cat_id");
+                    JsonNode catNode = getJsonNode(categoryNode, "id");
                     if (catNode != null) {
                         category.setId(catNode.asLong());
                     }
-                    catNode = getJsonNode(categoryNode, "li_cat_description");
+                    catNode = getJsonNode(categoryNode, "description");
                     if (catNode != null) {
                         category.setDescription(catNode.asText());
                     }
@@ -204,6 +239,7 @@ public class UserBidDto {
                 mapBidStatus(bid, root);
                 mapLineItems(bid, root);
                 mapUserCustomer(bid, root);
+                mapStrongHaulSettings(bid, root);
 
                 this.userBids.add(bid);
             } catch (JsonProcessingException ex) {
