@@ -14,6 +14,7 @@ import com.stronghaul.sitebid.models.BidStatus;
 import com.stronghaul.sitebid.models.LineItemCategory;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserBidLineItem;
+import com.stronghaul.sitebid.models.UserCustomer;
 
 public class UserBidDto {
     private ArrayList<UserBid> userBids;
@@ -85,6 +86,56 @@ public class UserBidDto {
         }             
     }
 
+    private void mapUserCustomer(UserBid bid, JsonNode root) {
+        JsonNode node = getJsonNode(root, "customer");
+        if (node != null) {
+            UserCustomer userCustomer = new UserCustomer();
+            JsonNode customerNode = getJsonNode(node, "cust_id");
+            if (customerNode != null) {
+                userCustomer.setId(customerNode.asLong());
+            }
+            customerNode = getJsonNode(node, "cust_first_name");
+            if (customerNode != null) {
+                userCustomer.setFirstName(customerNode.asText());
+            }
+            customerNode = getJsonNode(node, "cust_last_name");
+            if (customerNode != null) {
+                userCustomer.setLastName(customerNode.asText());
+            }
+            customerNode = getJsonNode(node, "cust_email");
+            if (customerNode != null) {
+                userCustomer.setEmail(customerNode.asText());
+            }
+            customerNode = getJsonNode(node, "cust_phone");
+            if (customerNode != null) {
+                userCustomer.setPhone(customerNode.asText());
+            }
+            customerNode = getJsonNode(node, "cust_user_profile_id");
+            if (customerNode != null) {
+                userCustomer.setUserProfileId(customerNode.asLong());
+            }
+
+            JsonNode addrNode = getJsonNode(node, "cust_address");
+            if (addrNode != null) {
+                Address address = new Address();
+                JsonNode custAddrNode = getJsonNode(addrNode, "cust_addr_id");
+                if (custAddrNode != null) {
+                    address.setId(custAddrNode.asLong());
+                }
+                custAddrNode = getJsonNode(addrNode, "cust_addr_street");
+                if (custAddrNode != null) {
+                    address.setStreet(custAddrNode.asText());
+                }
+                custAddrNode = getJsonNode(addrNode, "cust_addr_zip");
+                if (custAddrNode != null) {
+                    address.setZip(custAddrNode.asText());
+                }
+                userCustomer.setAddress(address);
+            }
+            bid.setUserCustomer(userCustomer);
+        }
+    }
+
     private void mapLineItems(UserBid bid, JsonNode root) {
         JsonNode node = getJsonNode(root, "lineItems");
         if (node != null && node.isArray()) {
@@ -152,6 +203,7 @@ public class UserBidDto {
                 mapBidAddress(bid, root);
                 mapBidStatus(bid, root);
                 mapLineItems(bid, root);
+                mapUserCustomer(bid, root);
 
                 this.userBids.add(bid);
             } catch (JsonProcessingException ex) {
