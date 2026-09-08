@@ -58,7 +58,7 @@ public class PostgresDbService {
     public UserProfile saveUser(UserProfile user) {
         Long userProfileId = insertUserProfile(user);
         user.setId(userProfileId);
-        insertUserCrew(userProfileId, user);
+        //insertUserCrew(userProfileId, user);
         return user;
     }
 
@@ -87,28 +87,28 @@ public class PostgresDbService {
         return generatedId[0];
     }
 
-    private Long insertUserCrew(Long userProfileId, UserProfile user) {
-        final String procedureCall = "CALL strong_haul_bid.user_crew_insert(?, ?, ?, ?, ?, ?, ?, ?)";
-        final Long[] generatedId = new Long[1];
+    // private Long insertUserCrew(Long userProfileId, UserCrew user) {
+    //     final String procedureCall = "CALL strong_haul_bid.user_crew_insert(?, ?, ?, ?, ?, ?, ?, ?)";
+    //     final Long[] generatedId = new Long[1];
 
-        jdbcTemplate.execute((Connection connection) -> {
-            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
-                callableStatement.setInt(1, userProfileId.intValue());
-                callableStatement.setString(2, user.getFirstName());
-                callableStatement.setString(3, user.getLastName());
-                callableStatement.setBigDecimal(4, BigDecimal.valueOf(user.getHourlyRate()));
-                callableStatement.setBoolean(5, user.isSubContractor());
-                callableStatement.setBigDecimal(6, BigDecimal.valueOf(user.getProfitPercentage()));
-                callableStatement.setBoolean(7, user.isActive());
-                callableStatement.setInt(8, 0);
-                callableStatement.registerOutParameter(8, Types.INTEGER);
-                callableStatement.execute();
-                generatedId[0] = (long) callableStatement.getInt(8);
-                return null;
-            }
-        });
-        return generatedId[0];
-    }
+    //     jdbcTemplate.execute((Connection connection) -> {
+    //         try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+    //             callableStatement.setInt(1, userProfileId.intValue());
+    //             callableStatement.setString(2, user.getFirstName());
+    //             callableStatement.setString(3, user.getLastName());
+    //             callableStatement.setDouble(4, user.getHourlyRate());
+    //             callableStatement.setBoolean(5, user.isSubContractor());
+    //             callableStatement.setDouble(6, BigDecimal.valueOf(user.getProfitPercentage()));
+    //             callableStatement.setBoolean(7, user.isActive());
+    //             callableStatement.setInt(8, 0);
+    //             callableStatement.registerOutParameter(8, Types.INTEGER);
+    //             callableStatement.execute();
+    //             generatedId[0] = (long) callableStatement.getInt(8);
+    //             return null;
+    //         }
+    //     });
+    //     return generatedId[0];
+    // }
 
     public void updateLastLogin(Long userId, LocalDateTime lastLogin) {
         jdbcTemplate.update("UPDATE " + postgresConfig.getUserProfileTable() + " SET last_login = ? WHERE id = ?",
