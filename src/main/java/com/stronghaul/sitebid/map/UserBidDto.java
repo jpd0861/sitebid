@@ -10,8 +10,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stronghaul.sitebid.models.Address;
-import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.BidStatus;
+import com.stronghaul.sitebid.models.LineItemCategory;
+import com.stronghaul.sitebid.models.UserBid;
+import com.stronghaul.sitebid.models.UserBidLineItem;
 
 public class UserBidDto {
     private ArrayList<UserBid> userBids;
@@ -83,21 +85,58 @@ public class UserBidDto {
         }             
     }
 
-    // private void mapLineItems(UserBid bid, JsonNode root) {
-    //     JsonNode node = getJsonNode(root, "lineItems");
-    //     if (node != null) {
-    //         BidStatus bidStatus = new BidStatus();
-    //         JsonNode statusNode = getJsonNode(node, "bid_stat_id");
-    //         if (statusNode != null) {
-    //             bidStatus.setId(statusNode.asLong());
-    //         }
-    //         statusNode = getJsonNode(node, "bid_stat_status");
-    //         if (statusNode != null) {
-    //             bidStatus.setStatus(statusNode.asText());
-    //         }
-    //         bid.setBidStatus(bidStatus);
-    //     }             
-    // }
+    private void mapLineItems(UserBid bid, JsonNode root) {
+        JsonNode node = getJsonNode(root, "lineItems");
+        if (node != null && node.isArray()) {
+            ArrayList<UserBidLineItem> userBidLineItems = new ArrayList<UserBidLineItem>();
+            for (JsonNode lineItemNode : node) {
+                UserBidLineItem lineItem = new UserBidLineItem();
+
+                JsonNode itemNode = getJsonNode(lineItemNode, "li_id");
+                if (itemNode != null) {
+                    lineItem.setId(itemNode.asLong());
+                }
+
+                itemNode = getJsonNode(lineItemNode, "li_user_bid_id");
+                if (itemNode != null) {
+                    lineItem.setUserBidId(itemNode.asLong());
+                }
+
+                itemNode = getJsonNode(lineItemNode, "li_amount");
+                if (itemNode != null) {
+                    lineItem.setAmount(itemNode.asDouble());
+                }
+
+                itemNode = getJsonNode(lineItemNode, "li_quantity");
+                if (itemNode != null) {
+                    lineItem.setQuantity(itemNode.asDouble());
+                }
+
+                itemNode = getJsonNode(lineItemNode, "li_description");
+                if (itemNode != null) {
+                    lineItem.setDescription(itemNode.asText());
+                }
+
+                JsonNode categoryNode = getJsonNode(lineItemNode, "category");
+                if (categoryNode != null) {
+                    LineItemCategory category = new LineItemCategory();
+                    JsonNode catNode = getJsonNode(categoryNode, "li_cat_id");
+                    if (catNode != null) {
+                        category.setId(catNode.asLong());
+                    }
+                    catNode = getJsonNode(categoryNode, "li_cat_description");
+                    if (catNode != null) {
+                        category.setDescription(catNode.asText());
+                    }
+                    lineItem.setLineItemCategory(category);
+                }
+
+                userBidLineItems.add(lineItem);
+            }
+
+            bid.setUserBidLineItems(userBidLineItems);
+        }
+    }
 
     public ArrayList<UserBid> map(ResultSet resultSet) throws SQLException {
         this.userBids = new ArrayList<UserBid>();
@@ -112,6 +151,7 @@ public class UserBidDto {
                 mapBidRootValues(bid, root);
                 mapBidAddress(bid, root);
                 mapBidStatus(bid, root);
+                mapLineItems(bid, root);
 
                 this.userBids.add(bid);
             } catch (JsonProcessingException ex) {
