@@ -31,6 +31,7 @@ public class AuthService {
         user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(rawPassword));
         user.setActive(true);
+        user.setLastLogin(LocalDateTime.now());
         return postgresDbService.saveUser(user);
     }
 

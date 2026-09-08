@@ -8,6 +8,7 @@ import com.stronghaul.sitebid.models.UserCrew;
 import com.stronghaul.sitebid.models.UserCustomer;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
+import com.stronghaul.sitebid.map.UserBidDto;
 import com.stronghaul.sitebid.map.UserCrewDto;
 import com.stronghaul.sitebid.map.UserCustomerDto;
 
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -61,22 +63,23 @@ public class PostgresDbService {
     }
 
     private Long insertUserProfile(UserProfile user) {
-        final String procedureCall = "CALL strong_haul_bid.user_profile_insert(?, ?, ?, ?, ?, ?, ?, ?)";
+        final String procedureCall = "CALL strong_haul_bid.user_profile_insert(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
         jdbcTemplate.execute((Connection connection) -> {
             try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
-                callableStatement.setString(1, user.getCompany());
-                callableStatement.setString(2, user.getFirstName());
-                callableStatement.setString(3, user.getLastName());
-                callableStatement.setString(4, user.getPhone());
-                callableStatement.setString(5, user.getEmail());
-                callableStatement.setString(6, user.getPasswordHash());
-                callableStatement.setBigDecimal(7, BigDecimal.valueOf(user.getProfitPercentage()));
-                callableStatement.setInt(8, 0);
-                callableStatement.registerOutParameter(8, Types.INTEGER);
+                callableStatement.setBoolean(1, user.isActive());
+                callableStatement.setString(2, user.getCompany());
+                callableStatement.setString(3, user.getFirstName());
+                callableStatement.setString(4, user.getLastName());
+                callableStatement.setString(5, user.getPhone());
+                callableStatement.setString(6, user.getEmail());
+                callableStatement.setString(7, user.getPasswordHash());
+                callableStatement.setBigDecimal(8, BigDecimal.valueOf(user.getProfitPercentage()));
+                callableStatement.setInt(9, 0);
+                callableStatement.registerOutParameter(9, Types.INTEGER);
                 callableStatement.execute();
-                generatedId[0] = (long) callableStatement.getInt(8);
+                generatedId[0] = (long) callableStatement.getInt(9);
                 return null;
             }
         });
@@ -85,7 +88,7 @@ public class PostgresDbService {
     }
 
     private Long insertUserCrew(Long userProfileId, UserProfile user) {
-        final String procedureCall = "CALL strong_haul_bid.usercrew_insert(?, ?, ?, ?, ?, ?, ?)";
+        final String procedureCall = "CALL strong_haul_bid.user_crew_insert(?, ?, ?, ?, ?, ?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
         jdbcTemplate.execute((Connection connection) -> {
@@ -96,10 +99,11 @@ public class PostgresDbService {
                 callableStatement.setBigDecimal(4, BigDecimal.valueOf(user.getHourlyRate()));
                 callableStatement.setBoolean(5, user.isSubContractor());
                 callableStatement.setBigDecimal(6, BigDecimal.valueOf(user.getProfitPercentage()));
-                callableStatement.setInt(7, 0);
-                callableStatement.registerOutParameter(7, Types.INTEGER);
+                callableStatement.setBoolean(7, user.isActive());
+                callableStatement.setInt(8, 0);
+                callableStatement.registerOutParameter(8, Types.INTEGER);
                 callableStatement.execute();
-                generatedId[0] = (long) callableStatement.getInt(7);
+                generatedId[0] = (long) callableStatement.getInt(8);
                 return null;
             }
         });
@@ -237,12 +241,13 @@ public class PostgresDbService {
         UserCrewDto userCrewDto = new UserCrewDto();
 
         jdbcTemplate.execute((Connection connection) -> {
-            
-            try (CallableStatement callableStatement = connection.prepareCall("{ CALL strong_haul_bid.user_crew_get(?, ?) }")) {
-                callableStatement.setInt(1, userProfileId.intValue());
-                callableStatement.setInt(2, crewId.intValue());
-                ResultSet resultSet = callableStatement.executeQuery();
-                userCrews.addAll(userCrewDto.map(resultSet));
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM strong_haul_bid.user_crew_get(?, ?)")) {
+                preparedStatement.setInt(1, userProfileId.intValue());
+                preparedStatement.setInt(2, crewId.intValue());
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    userCrews.addAll(userCrewDto.map(resultSet));
+                }
                 return userCrews;
             }
         });
@@ -303,12 +308,13 @@ public class PostgresDbService {
         UserCustomerDto userCustomerDto = new UserCustomerDto();
 
         jdbcTemplate.execute((Connection connection) -> {
-            
-            try (CallableStatement callableStatement = connection.prepareCall("{ CALL strong_haul_bid.user_customer_get(?, ?) }")) {
-                callableStatement.setInt(1, userProfileId.intValue());
-                callableStatement.setInt(2, customerId.intValue());
-                ResultSet resultSet = callableStatement.executeQuery();
-                userCustomers.addAll(userCustomerDto.map(resultSet));
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM strong_haul_bid.user_customer_get(?, ?)")) {
+                preparedStatement.setInt(1, userProfileId.intValue());
+                preparedStatement.setInt(2, customerId.intValue());
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    userCustomers.addAll(userCustomerDto.map(resultSet));
+                }
                 return userCustomers;
             }
         });
@@ -359,5 +365,24 @@ public class PostgresDbService {
             }
         });
         return userCustomer;
+    }
+
+    public ArrayList<UserBid> getUserBids(UserProfile userProfile, Long bidId) {
+        final ArrayList<UserBid> userBids = new ArrayList<>();
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT strong_haul_bid.user_bid_get_json(?, ?)")) {
+                preparedStatement.setInt(1, userProfile.getId().intValue());
+                preparedStatement.setInt(2, bidId.intValue());
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    UserBidDto userBidDto = new UserBidDto();
+                    userBids.addAll(userBidDto.map(resultSet));      
+                }
+                return userBids;
+            }
+        });
+
+        return userBids;
     }
 }

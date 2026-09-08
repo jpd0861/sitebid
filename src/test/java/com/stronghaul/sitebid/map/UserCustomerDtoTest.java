@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.stronghaul.sitebid.map.UserCustomerDto;
-import com.stronghaul.sitebid.models.UserCrew;
 import com.stronghaul.sitebid.models.UserCustomer;
 
 public class UserCustomerDtoTest {

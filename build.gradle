@@ -20,6 +20,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	runtimeOnly 'org.postgresql:postgresql'
 	// Spring Security (Required for BCrypt password hashing)
     implementation 'org.springframework.boot:spring-boot-starter-security'

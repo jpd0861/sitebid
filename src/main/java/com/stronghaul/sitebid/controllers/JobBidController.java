@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/bid")
@@ -24,6 +25,16 @@ public class JobBidController {
 
     public JobBidController(PostgresDbService postgresDbService) {
         this.postgresDbService = postgresDbService;
+    }
+
+    @PostMapping ("/get")
+    public ResponseEntity<ArrayList<UserBid>> getUserBid(@RequestBody UserProfile request) {
+        ArrayList<UserBid> userBids = postgresDbService.getUserBids(request, 0L);
+        if (!userBids.isEmpty()) {
+            return ResponseEntity.ok(userBids);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/save")
