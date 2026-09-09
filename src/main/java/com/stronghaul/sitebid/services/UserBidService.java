@@ -17,8 +17,6 @@ public class UserBidService {
     }
 
     public ArrayList<UserBid> getUserBids(UserProfile userProfile, Long bidId) {
-
         return postgresDbService.getUserBids(userProfile, bidId);
     }
-
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -67,7 +66,7 @@ public class JobBidController {
             String street,
             String zip,
             String scopeOfWork,
-            BigDecimal profitPercentageOverride,
+            double profitPercentageOverride,
             @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS") LocalDateTime dateOfBid) {
     }
 

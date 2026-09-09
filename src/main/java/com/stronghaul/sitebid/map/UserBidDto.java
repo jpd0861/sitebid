@@ -47,7 +47,7 @@ public class UserBidDto {
 
         node = getJsonNode(root, "profit_percentage_override");
         if (node != null) {
-            bid.setProfitPercentageOverride(new BigDecimal(node.asText()));
+            bid.setProfitPercentageOverride(node.asDouble());
         }
 
         node = getJsonNode(root, "date_of_bid");

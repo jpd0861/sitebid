@@ -2,7 +2,6 @@ package com.stronghaul.sitebid.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -16,7 +15,7 @@ public class UserBid {
     private ArrayList<UserBidLineItemCrew> userBidLineItemCrews = new ArrayList<UserBidLineItemCrew>();
     private ArrayList<UserBidLineItemSupplier> userBidLineItemSuppliers = new ArrayList<UserBidLineItemSupplier>();
     private String scopeOfWork;
-    private BigDecimal profitPercentageOverride;
+    private double profitPercentageOverride;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
     private LocalDateTime dateOfBid;
     private StrongHaulSettings strongHaulSettings = new StrongHaulSettings();
@@ -88,10 +87,10 @@ public class UserBid {
         this.scopeOfWork = value;
     }
 
-    public BigDecimal getProfitPercentageOverride() {
+    public double getProfitPercentageOverride() {
         return this.profitPercentageOverride;
     }
-    public void setProfitPercentageOverride(BigDecimal value) {
+    public void setProfitPercentageOverride(double value) {
         this.profitPercentageOverride = value;
     }
 

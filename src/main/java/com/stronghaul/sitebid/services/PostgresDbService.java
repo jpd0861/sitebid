@@ -192,7 +192,7 @@ public class PostgresDbService {
                 callableStatement.setInt(3, bid.getBidStatus().getId().intValue());
                 callableStatement.setInt(4, bid.getAddress().getId().intValue());
                 callableStatement.setString(5, bid.getScopeOfWork());
-                callableStatement.setBigDecimal(6, bid.getProfitPercentageOverride());
+                callableStatement.setDouble(6, bid.getProfitPercentageOverride());
                 callableStatement.setTimestamp(7, Timestamp.valueOf(bid.getDateOfBid()));
                 callableStatement.setInt(8, 0);
                 callableStatement.registerOutParameter(8, Types.INTEGER);
