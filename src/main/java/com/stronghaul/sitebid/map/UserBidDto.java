@@ -15,6 +15,8 @@ import com.stronghaul.sitebid.models.LineItemCategory;
 import com.stronghaul.sitebid.models.StrongHaulSettings;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserBidLineItem;
+import com.stronghaul.sitebid.models.UserBidLineItemCrew;
+import com.stronghaul.sitebid.models.UserCrew;
 import com.stronghaul.sitebid.models.UserCustomer;
 import com.stronghaul.sitebid.models.UserProfile;
 
@@ -279,6 +281,75 @@ public class UserBidDto {
         }
     }
 
+    private void mapCrewLineItems(UserBid bid, JsonNode root) {
+        JsonNode node = getJsonNode(root, "lineItemsCrew");
+        if (node != null && node.isArray()) {
+            ArrayList<UserBidLineItemCrew> userBidLineItems = new ArrayList<UserBidLineItemCrew>();
+            for (JsonNode lineItemNode : node) {
+                UserBidLineItemCrew lineItem = new UserBidLineItemCrew();
+
+                JsonNode itemNode = getJsonNode(lineItemNode, "id");
+                if (itemNode != null) {
+                    lineItem.setId(itemNode.asLong());
+                }
+                itemNode = getJsonNode(lineItemNode, "user_bid_id");
+                if (itemNode != null) {
+                    lineItem.setUserBidId(itemNode.asLong());
+                }
+                itemNode = getJsonNode(lineItemNode, "hours");
+                if (itemNode != null) {
+                    lineItem.setHours(itemNode.asDouble());
+                }
+                itemNode = getJsonNode(lineItemNode, "description");
+                if (itemNode != null) {
+                    lineItem.setDescription(itemNode.asText());
+                }
+
+                JsonNode userCrewNode = getJsonNode(lineItemNode, "crew");
+                if (userCrewNode != null) {
+                    UserCrew userCrew = new UserCrew();
+                    JsonNode crewNode = getJsonNode(userCrewNode, "id");
+                    if (crewNode != null) {
+                        userCrew.setId(crewNode.asLong());
+                    }
+                    crewNode = getJsonNode(userCrewNode, "is_active");
+                    if (crewNode != null) {
+                        userCrew.setActive(crewNode.asBoolean());
+                    }
+                    crewNode = getJsonNode(userCrewNode, "first_name");
+                    if (crewNode != null) {
+                        userCrew.setFirstName(crewNode.asText());
+                    }
+                    crewNode = getJsonNode(userCrewNode, "last_name");
+                    if (crewNode != null) {
+                        userCrew.setLastName(crewNode.asText());
+                    }
+                    crewNode = getJsonNode(userCrewNode, "hourly_rate");
+                    if (crewNode != null) {
+                        userCrew.setHourlyRate(crewNode.asDouble());
+                    }
+                    crewNode = getJsonNode(userCrewNode, "is_sub_contractor");
+                    if (crewNode != null) {
+                        userCrew.setSubContractor(crewNode.asBoolean());
+                    }
+                    crewNode = getJsonNode(userCrewNode, "overhead_percentage");
+                    if (crewNode != null) {
+                        userCrew.setOverheadPercentage(crewNode.asDouble());
+                    }
+                    crewNode = getJsonNode(userCrewNode, "user_profile_id");
+                    if (crewNode != null) {
+                        userCrew.setUserProfileId(crewNode.asLong());
+                    }
+                    lineItem.setUserCrew(userCrew);
+                }
+
+                userBidLineItems.add(lineItem);
+            }
+
+            bid.setUserBidLineItemCrews(userBidLineItems);
+        }
+    }
+
     public ArrayList<UserBid> map(ResultSet resultSet) throws SQLException {
         this.userBids = new ArrayList<UserBid>();
         final ObjectMapper mapper = new ObjectMapper();
@@ -293,6 +364,7 @@ public class UserBidDto {
                 mapBidAddress(bid, root);
                 mapBidStatus(bid, root);
                 mapLineItems(bid, root);
+                mapCrewLineItems(bid, root);
                 mapUserCustomer(bid, root);
                 mapStrongHaulSettings(bid, root);
                 mapUserProfile(bid, root);
