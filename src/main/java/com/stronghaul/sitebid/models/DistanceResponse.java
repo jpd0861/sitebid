@@ -20,32 +20,28 @@ public class DistanceResponse {
 	public String getOrigin() {
 		return origin;
 	}
-
-	public void setOrigin(String origin) {
-		this.origin = origin;
+	public void setOrigin(String value) {
+		this.origin = value;
 	}
 
 	public String getDestination() {
 		return destination;
 	}
-
-	public void setDestination(String destination) {
-		this.destination = destination;
+	public void setDestination(String value) {
+		this.destination = value;
 	}
 
 	public double getDistanceMiles() {
 		return distanceMiles;
 	}
-
-	public void setDistanceMiles(double distanceMiles) {
-		this.distanceMiles = distanceMiles;
+	public void setDistanceMiles(double value) {
+		this.distanceMiles = value;
 	}
 
 	public String getDuration() {
 		return duration;
 	}
-
-	public void setDuration(String duration) {
-		this.duration = duration;
+	public void setDuration(String value) {
+		this.duration = value;
 	}
 }

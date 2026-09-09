@@ -11,11 +11,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.BidStatus;
+import com.stronghaul.sitebid.models.InventoryItem;
 import com.stronghaul.sitebid.models.LineItemCategory;
 import com.stronghaul.sitebid.models.StrongHaulSettings;
+import com.stronghaul.sitebid.models.Supplier;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserBidLineItem;
 import com.stronghaul.sitebid.models.UserBidLineItemCrew;
+import com.stronghaul.sitebid.models.UserBidLineItemSupplier;
 import com.stronghaul.sitebid.models.UserCrew;
 import com.stronghaul.sitebid.models.UserCustomer;
 import com.stronghaul.sitebid.models.UserProfile;
@@ -56,20 +59,7 @@ public class UserBidDto {
     private void mapBidAddress(UserBid bid, JsonNode root) {
         JsonNode node = getJsonNode(root, "bidAddress");
         if (node != null) {
-            Address address = new Address();
-            JsonNode addrNode = getJsonNode(node, "id");
-
-            if (addrNode != null) {
-                address.setId(addrNode.asLong());
-            }
-            addrNode = getJsonNode(node, "street");
-            if (addrNode != null) {
-                address.setStreet(addrNode.asText());
-            }
-            addrNode = getJsonNode(node, "zip");
-            if (addrNode != null) {
-                address.setZip(addrNode.asText());
-            }
+            Address address = getAddressFromNode(node);
             bid.setAddress(address);
         }             
     }
@@ -125,9 +115,7 @@ public class UserBidDto {
 
     private void mapUserCustomer(UserBid bid, JsonNode root) {
         JsonNode node = getJsonNode(root, "customer");
-        JsonNode addrNode = null;
         if (node != null) {
-            addrNode = getJsonNode(node, "address");
             UserCustomer userCustomer = new UserCustomer();
             JsonNode customerNode = getJsonNode(node, "id");
             if (customerNode != null) {
@@ -154,20 +142,9 @@ public class UserBidDto {
                 userCustomer.setUserProfileId(customerNode.asLong());
             }
 
+            JsonNode addrNode = getJsonNode(node, "address");
             if (addrNode != null) {
-                Address address = new Address();
-                JsonNode custAddrNode = getJsonNode(addrNode, "id");
-                if (custAddrNode != null) {
-                    address.setId(custAddrNode.asLong());
-                }
-                custAddrNode = getJsonNode(addrNode, "street");
-                if (custAddrNode != null) {
-                    address.setStreet(custAddrNode.asText());
-                }
-                custAddrNode = getJsonNode(addrNode, "zip");
-                if (custAddrNode != null) {
-                    address.setZip(custAddrNode.asText());
-                }
+                Address address = getAddressFromNode(addrNode);
                 userCustomer.setAddress(address);
             }
             bid.setUserCustomer(userCustomer);
@@ -239,22 +216,18 @@ public class UserBidDto {
                 if (itemNode != null) {
                     lineItem.setId(itemNode.asLong());
                 }
-
                 itemNode = getJsonNode(lineItemNode, "user_bid_id");
                 if (itemNode != null) {
                     lineItem.setUserBidId(itemNode.asLong());
                 }
-
                 itemNode = getJsonNode(lineItemNode, "amount");
                 if (itemNode != null) {
                     lineItem.setAmount(itemNode.asDouble());
                 }
-
                 itemNode = getJsonNode(lineItemNode, "quantity");
                 if (itemNode != null) {
                     lineItem.setQuantity(itemNode.asDouble());
                 }
-
                 itemNode = getJsonNode(lineItemNode, "description");
                 if (itemNode != null) {
                     lineItem.setDescription(itemNode.asText());
@@ -273,10 +246,8 @@ public class UserBidDto {
                     }
                     lineItem.setLineItemCategory(category);
                 }
-
                 userBidLineItems.add(lineItem);
             }
-
             bid.setUserBidLineItems(userBidLineItems);
         }
     }
@@ -350,11 +321,135 @@ public class UserBidDto {
         }
     }
 
+
+    private Address getAddressFromNode(JsonNode node){
+        Address address = new Address();
+        JsonNode addrNode = getJsonNode(node, "id");
+        if (addrNode != null) {
+            address.setId(addrNode.asLong());
+        }
+        addrNode = getJsonNode(node, "street");
+        if (addrNode != null) {
+            address.setStreet(addrNode.asText());
+        }
+        addrNode = getJsonNode(node, "zip");
+        if (addrNode != null) {
+            address.setZip(addrNode.asText());
+        }
+        return address;
+    }
+
+
+    private void mapSupplierLineItems(UserBid bid, JsonNode root) {
+        JsonNode node = getJsonNode(root, "lineItemsSupplier");
+        if (node != null && node.isArray()) {
+            ArrayList<UserBidLineItemSupplier> userBidLineItems = new ArrayList<UserBidLineItemSupplier>();
+            for (JsonNode lineItemNode : node) {
+                UserBidLineItemSupplier lineItem = new UserBidLineItemSupplier();
+
+                JsonNode itemNode = getJsonNode(lineItemNode, "id");
+                if (itemNode != null) {
+                    lineItem.setId(itemNode.asLong());
+                }
+                itemNode = getJsonNode(lineItemNode, "user_bid_id");
+                if (itemNode != null) {
+                    lineItem.setUserBidId(itemNode.asLong());
+                }
+                itemNode = getJsonNode(lineItemNode, "site_delivery");
+                if (itemNode != null) {
+                    lineItem.setSiteDelivery(itemNode.asBoolean());
+                }
+                itemNode = getJsonNode(lineItemNode, "description");
+                if (itemNode != null) {
+                    lineItem.setDescription(itemNode.asText());
+                }
+                itemNode = getJsonNode(lineItemNode, "contractor_discount_percentage");
+                if (itemNode != null) {
+                    lineItem.setContractorDiscountPercentage(itemNode.asDouble());
+                }
+                itemNode = getJsonNode(lineItemNode, "amount");
+                if (itemNode != null) {
+                    lineItem.setAmount(itemNode.asDouble());
+                }
+                itemNode = getJsonNode(lineItemNode, "quantity");
+                if (itemNode != null) {
+                    lineItem.setQuantity(itemNode.asDouble());
+                }
+
+                JsonNode userSupplierNode = getJsonNode(lineItemNode, "supplier");
+                if (userSupplierNode != null) {
+                    InventoryItem userSupplier = new InventoryItem();
+                    JsonNode supplierNode = getJsonNode(userSupplierNode, "id");
+                    if (supplierNode != null) {
+                        userSupplier.setId(supplierNode.asLong());
+                    }
+                    supplierNode = getJsonNode(userSupplierNode, "phone");
+                    if (supplierNode != null) {
+                        userSupplier.setPhone(supplierNode.asText());
+                    }
+                    supplierNode = getJsonNode(userSupplierNode, "company_name");
+                    if (supplierNode != null) {
+                        userSupplier.setCompanyName(supplierNode.asText());
+                    }
+
+                    JsonNode addressNode = getJsonNode(userSupplierNode, "address");
+                    if (addressNode != null) {
+                        Address address = getAddressFromNode(addressNode);
+                        userSupplier.setAddress(address);
+                    }
+
+                    JsonNode inventoryNode = getJsonNode(userSupplierNode, "inventoryItem");
+                    if(inventoryNode != null){
+                        supplierNode = getJsonNode(inventoryNode, "id");
+                        if(supplierNode != null){
+                            userSupplier.setAverageWeightPerUnit(supplierNode.asDouble());
+                        }
+                        supplierNode = getJsonNode(inventoryNode, "product");
+                        if(supplierNode != null){
+                            userSupplier.setProduct(supplierNode.asText());
+                        }
+                        supplierNode = getJsonNode(inventoryNode, "product_description");
+                        if(supplierNode != null){
+                            userSupplier.setProductDescription(supplierNode.asText());
+                        }
+                        supplierNode = getJsonNode(inventoryNode, "product_delivery_type");
+                        if(supplierNode != null){
+                            userSupplier.setProductDeliveryType(supplierNode.asText());
+                        }
+
+                        JsonNode categoryNode = getJsonNode(inventoryNode, "category");
+                        if(categoryNode != null){
+                            LineItemCategory cat = new LineItemCategory();
+                            supplierNode = getJsonNode(categoryNode, "id");
+                            if(supplierNode != null){
+                                cat.setId(supplierNode.asLong());
+                            }
+                            supplierNode = getJsonNode(categoryNode, "category");
+                            if(supplierNode != null){
+                                cat.setCategory(supplierNode.asText());
+                            }
+                            supplierNode = getJsonNode(categoryNode, "description");
+                            if(supplierNode != null){
+                                cat.setDescription(supplierNode.asText());
+                            }
+                            userSupplier.setCategory(cat);
+                        }
+
+                        lineItem.setSupplier(userSupplier);
+                    }
+                }
+
+                userBidLineItems.add(lineItem);
+            }
+            bid.setUserBidLineItemSuppliers(userBidLineItems);
+        }
+    }
+
     public ArrayList<UserBid> map(ResultSet resultSet) throws SQLException {
         this.userBids = new ArrayList<UserBid>();
         final ObjectMapper mapper = new ObjectMapper();
         
-        if (resultSet.next()) {
+        while (resultSet.next()) {
             String json = resultSet.getString(1);
             try {
                 JsonNode root = mapper.readTree(json);
@@ -365,6 +460,7 @@ public class UserBidDto {
                 mapBidStatus(bid, root);
                 mapLineItems(bid, root);
                 mapCrewLineItems(bid, root);
+                mapSupplierLineItems(bid, root);
                 mapUserCustomer(bid, root);
                 mapStrongHaulSettings(bid, root);
                 mapUserProfile(bid, root);

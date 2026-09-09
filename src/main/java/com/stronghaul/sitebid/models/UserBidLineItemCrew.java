@@ -11,40 +11,35 @@ public class UserBidLineItemCrew {
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public Long getUserBidId() {
         return userBidId;
     }
-
-    public void setUserBidId(Long userBidId) {
-        this.userBidId = userBidId;
+    public void setUserBidId(Long value) {
+        this.userBidId = value;
     }
 
     public UserCrew getUserCrew() {
         return userCrew;
     }
-
-    public void setUserCrew(UserCrew userCrew) {
-        this.userCrew = userCrew;
+    public void setUserCrew(UserCrew value) {
+        this.userCrew = value;
     }
 
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String value) {
+        this.description = value;
     }
 
     public double getHours() {
         return hours;
     }
-
-    public void setHours(double hours) {
-        this.hours = hours;
+    public void setHours(double value) {
+        this.hours = value;
     }
 }

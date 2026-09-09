@@ -13,49 +13,56 @@ public class UserCrew {
     public Long getId() {
         return id;
     }
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
+
     public Long getUserProfileId() {
         return userProfileId;
     }
-    public void setUserProfileId(Long userProfileId) {
-        this.userProfileId = userProfileId;
+    public void setUserProfileId(Long value) {
+        this.userProfileId = value;
     }
+
     public String getFirstName() {
         return firstName;
     }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstName(String value) {
+        this.firstName = value;
     }
+
     public String getLastName() {
         return lastName;
     }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastName(String value) {
+        this.lastName = value;
     }
+
     public double getHourlyRate() {
         return hourlyRate;
     }
-    public void setHourlyRate(double hourlyRate) {
-        this.hourlyRate = hourlyRate;
+    public void setHourlyRate(double value) {
+        this.hourlyRate = value;
     }
+
     public boolean isSubContractor() {
         return isSubContractor;
     }
-    public void setSubContractor(boolean subContractor) {
-        isSubContractor = subContractor;
+    public void setSubContractor(boolean value) {
+        isSubContractor = value;
     }
+
     public double getOverheadPercentage() {
         return overheadPercentage;
     }
-    public void setOverheadPercentage(double overheadPercentage) {
-        this.overheadPercentage = overheadPercentage;
+    public void setOverheadPercentage(double value) {
+        this.overheadPercentage = value;
     }
+
     public boolean isActive() {
         return isActive;
     }
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setActive(boolean value) {
+        isActive = value;
     }
 }

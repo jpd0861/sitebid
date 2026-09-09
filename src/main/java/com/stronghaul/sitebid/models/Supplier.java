@@ -10,32 +10,28 @@ public class Supplier {
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public String getCompanyName() {
         return companyName;
     }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setCompanyName(String value) {
+        this.companyName = value;
     }
 
     public String getPhone() {
         return phone;
     }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhone(String value) {
+        this.phone = value;
     }
 
     public Address getAddress() {
         return address;
     }
-
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddress(Address value) {
+        this.address = value;
     }
 }

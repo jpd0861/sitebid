@@ -9,15 +9,14 @@ public class BidStatus {
         return this.id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public String getStatus() {
         return this.status;
     }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(String value) {
+        this.status = value;
     }
 }

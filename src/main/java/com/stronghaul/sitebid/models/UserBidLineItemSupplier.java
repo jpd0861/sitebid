@@ -8,61 +8,62 @@ public class UserBidLineItemSupplier {
     private double quantity;
     private double contractorDiscountPercentage;
     private boolean siteDelivery;
+    private InventoryItem supplier = new InventoryItem();
 
     // Getters and Setters
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public Long getUserBidId() {
         return userBidId;
     }
-
-    public void setUserBidId(Long userBidId) {
-        this.userBidId = userBidId;
+    public void setUserBidId(Long value) {
+        this.userBidId = value;
     }
 
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String value) {
+        this.description = value;
     }
 
     public double getAmount() {
         return amount;
     }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setAmount(double value) {
+        this.amount = value;
     }
 
     public double getQuantity() {
         return quantity;
     }
-
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
+    public void setQuantity(double value) {
+        this.quantity = value;
     }
 
     public double getContractorDiscountPercentage() {
         return contractorDiscountPercentage;
     }
-
-    public void setContractorDiscountPercentage(double contractorDiscountPercentage) {
-        this.contractorDiscountPercentage = contractorDiscountPercentage;
+    public void setContractorDiscountPercentage(double value) {
+        this.contractorDiscountPercentage = value;
     }
 
     public boolean isSiteDelivery() {
         return siteDelivery;
     }
+    public void setSiteDelivery(boolean value) {
+        this.siteDelivery = value;
+    }
 
-    public void setSiteDelivery(boolean siteDelivery) {
-        this.siteDelivery = siteDelivery;
+    public InventoryItem getSupplier(){
+        return this.supplier;
+    }
+    public void setSupplier(InventoryItem value){
+        this.supplier = value;
     }
 }

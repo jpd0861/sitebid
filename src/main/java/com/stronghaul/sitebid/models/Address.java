@@ -9,24 +9,21 @@ public class Address {
     public Long getId() {
         return this.id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public String getStreet() {
         return this.street;
     }
-
-    public void setStreet(String street) {
-        this.street = street;
+    public void setStreet(String value) {
+        this.street = value;
     }
 
     public String getZip() {
         return this.zip;
     }
-
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setZip(String value) {
+        this.zip = value;
     }
 }

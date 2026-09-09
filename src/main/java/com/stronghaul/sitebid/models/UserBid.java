@@ -25,41 +25,36 @@ public class UserBid {
     public Long getId() {
         return this.id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public UserCustomer getUserCustomer() {
         return this.userCustomer;
     }
-
-    public void setUserCustomer(UserCustomer userCustomer) {
-        this.userCustomer = userCustomer;
+    public void setUserCustomer(UserCustomer value) {
+        this.userCustomer = value;
     }
 
     public UserProfile getUserProfile() {
         return this.userProfile;
     }
-
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
+    public void setUserProfile(UserProfile value) {
+        this.userProfile = value;
     }
 
     public Address getAddress() {
         return this.address;
     }
-
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddress(Address value) {
+        this.address = value;
     }
 
     public BidStatus getBidStatus() {
         return this.bidStatus;
     }
-
-    public void setBidStatus(BidStatus bidStatus) {
-        this.bidStatus = bidStatus;
+    public void setBidStatus(BidStatus value) {
+        this.bidStatus = value;
     }
 
     public ArrayList<UserBidLineItem> getUserBidLineItems() {
@@ -70,51 +65,48 @@ public class UserBid {
         return this.userBidLineItemCrews;
     }
 
-    public void setUserBidLineItemCrews(ArrayList<UserBidLineItemCrew> userBidLineItemCrews) {
-        this.userBidLineItemCrews = userBidLineItemCrews;
+    public void setUserBidLineItemCrews(ArrayList<UserBidLineItemCrew> value) {
+        this.userBidLineItemCrews = value;
     }
 
-    public void setUserBidLineItems(ArrayList<UserBidLineItem> userBidLineItems) {
-        this.userBidLineItems = userBidLineItems;
+    public void setUserBidLineItems(ArrayList<UserBidLineItem> value) {
+        this.userBidLineItems = value;
     }
 
     public ArrayList<UserBidLineItemSupplier> getUserBidLineItemSuppliers() {
         return this.userBidLineItemSuppliers;
     }
 
-    public void setUserBidLineItemSuppliers(ArrayList<UserBidLineItemSupplier> userBidLineItemSuppliers) {
-        this.userBidLineItemSuppliers = userBidLineItemSuppliers;
+    public void setUserBidLineItemSuppliers(ArrayList<UserBidLineItemSupplier> value) {
+        this.userBidLineItemSuppliers = value;
     }
 
     public String getScopeOfWork() {
         return this.scopeOfWork;
     }
-
-    public void setScopeOfWork(String scopeOfWork) {
-        this.scopeOfWork = scopeOfWork;
+    public void setScopeOfWork(String value) {
+        this.scopeOfWork = value;
     }
 
     public BigDecimal getProfitPercentageOverride() {
         return this.profitPercentageOverride;
     }
-
-    public void setProfitPercentageOverride(BigDecimal profitPercentageOverride) {
-        this.profitPercentageOverride = profitPercentageOverride;
+    public void setProfitPercentageOverride(BigDecimal value) {
+        this.profitPercentageOverride = value;
     }
 
     public LocalDateTime getDateOfBid() {
         return this.dateOfBid;
     }
-
-    public void setDateOfBid(LocalDateTime dateOfBid) {
-        this.dateOfBid = dateOfBid;
+    public void setDateOfBid(LocalDateTime value) {
+        this.dateOfBid = value;
     }
 
     public StrongHaulSettings getStrongHaulSettings() {
         return this.strongHaulSettings;
     }
 
-    public void setStrongHaulSettings(StrongHaulSettings strongHaulSettings) {
-        this.strongHaulSettings = strongHaulSettings;
+    public void setStrongHaulSettings(StrongHaulSettings value) {
+        this.strongHaulSettings = value;
     }
 }

@@ -12,48 +12,42 @@ public class UserBidLineItem {
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public Long getUserBidId() {
         return userBidId;
     }
-
-    public void setUserBidId(Long userBidId) {
-        this.userBidId = userBidId;
+    public void setUserBidId(Long value) {
+        this.userBidId = value;
     }
 
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String value) {
+        this.description = value;
     }
 
     public double getAmount() {
         return amount;
     }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setAmount(double value) {
+        this.amount = value;
     }
 
     public double getQuantity() {
         return quantity;
     }
-
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
+    public void setQuantity(double value) {
+        this.quantity = value;
     }
 
     public LineItemCategory getLineItemCategory() {
         return lineItemCategory;
     }
-
-    public void setLineItemCategory(LineItemCategory lineItemCategory) {
-        this.lineItemCategory = lineItemCategory;
+    public void setLineItemCategory(LineItemCategory value) {
+        this.lineItemCategory = value;
     }
 }

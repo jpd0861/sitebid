@@ -1,7 +1,5 @@
 package com.stronghaul.sitebid.models;
 
-import java.math.BigDecimal;
-
 public class StrongHaulSettings {
     private Long id;
     private Double ratePerMile;
@@ -14,47 +12,42 @@ public class StrongHaulSettings {
     public Long getId() {
         return id; 
     }
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public Double getRatePerMile() {
         return ratePerMile;
     }
-
-    public void setRatePerMile(Double ratePerMile) {
-        this.ratePerMile = ratePerMile;
+    public void setRatePerMile(double value) {
+        this.ratePerMile = value;
     }
 
     public Double getBaseHookupFee() {
         return baseHookupFee;
     }
-
-    public void setBaseHookupFee(Double baseHookupFee) {
-        this.baseHookupFee = baseHookupFee;
+    public void setBaseHookupFee(double value) {
+        this.baseHookupFee = value;
     }
 
     public Double getTechPlatformFee() {
         return techPlatformFee;
     }
-
-    public void setTechPlatformFee(Double techPlatformFee) {
-        this.techPlatformFee = techPlatformFee;
+    public void setTechPlatformFee(double value) {
+        this.techPlatformFee = value;
     }
 
     public Double getOnlineTransactionFee() {
         return onlineTransactionFee;
     }
-
-    public void setOnlineTransactionFee(Double onlineTransactionFee) {
-        this.onlineTransactionFee = onlineTransactionFee;
+    public void setOnlineTransactionFee(double value) {
+        this.onlineTransactionFee = value;
     }
 
     public Double getOnlineTransactionPercentage() {
         return onlineTransactionPercentage;
     }
-
-    public void setOnlineTransactionPercentage(Double onlineTransactionPercentage) {
-        this.onlineTransactionPercentage = onlineTransactionPercentage;
+    public void setOnlineTransactionPercentage(double value) {
+        this.onlineTransactionPercentage = value;
     }
 }

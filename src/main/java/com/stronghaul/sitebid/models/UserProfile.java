@@ -18,62 +18,70 @@ public class UserProfile {
     public Long getId() {
         return this.id;
     }
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long value) {
+        this.id = value;
     }
 
     public boolean isActive() {
         return this.isActive;
     }
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setActive(boolean value) {
+        this.isActive = value;
     }
+
     public String getCompany() {
         return this.company;
     }
-    public void setCompany(String company) {
-        this.company = company;
+    public void setCompany(String value) {
+        this.company = value;
     }
+
     public String getFirstName() {
         return this.firstName;
     }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstName(String value) {
+        this.firstName = value;
     }
+
     public String getLastName() {
         return this.lastName;
     }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastName(String value) {
+        this.lastName = value;
     }
+
     public String getPhone() {
         return this.phone;
     }
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhone(String value) {
+        this.phone = value;
     }
+
     public String getEmail() {
         return this.email;
     }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String value) {
+        this.email = value;
     }
+
     public String getPasswordHash() {
         return this.passwordHash;
     }
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPasswordHash(String value) {
+        this.passwordHash = value;
     }
+
     public double getProfitPercentage() {
         return this.profitPercentage;
     }
-    public void setProfitPercentage(double profitPercentage) {
-        this.profitPercentage = profitPercentage;
+    public void setProfitPercentage(double value) {
+        this.profitPercentage = value;
     }
+
     public LocalDateTime getLastLogin() {
         return this.lastLogin;
     }
-    public void setLastLogin(LocalDateTime lastLogin) {
-        this.lastLogin = lastLogin;
+    public void setLastLogin(LocalDateTime value) {
+        this.lastLogin = value;
     }
 }
