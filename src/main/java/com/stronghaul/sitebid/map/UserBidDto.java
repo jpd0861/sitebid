@@ -1,6 +1,5 @@
 package com.stronghaul.sitebid.map;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -14,7 +13,6 @@ import com.stronghaul.sitebid.models.BidStatus;
 import com.stronghaul.sitebid.models.InventoryItem;
 import com.stronghaul.sitebid.models.LineItemCategory;
 import com.stronghaul.sitebid.models.StrongHaulSettings;
-import com.stronghaul.sitebid.models.Supplier;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserBidLineItem;
 import com.stronghaul.sitebid.models.UserBidLineItemCrew;

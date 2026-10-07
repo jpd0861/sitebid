@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.stronghaul.sitebid.models.BidStatus;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserBidRequest;
 import com.stronghaul.sitebid.models.UserBidResponse;
@@ -21,6 +20,18 @@ public class UserBidService {
         return postgresDbService.getUserBids(userProfile, bidId);
     }
 
+    private UserBid mapUserBidRequest(UserBidRequest request){
+        UserBid userBid = new UserBid();
+        userBid.setAddress(request.getSiteAddress());
+        userBid.setBidStatus(request.getBidStatus());
+        userBid.setDateOfBid(request.getDateOfBid());
+        userBid.setProfitPercentageOverride(request.getProfitPercentage());
+        userBid.setScopeOfWork(request.getScopeOfWork());
+        userBid.setDateOfBid(request.getDateOfBid());
+        userBid = this.postgresDbService.saveBid(userBid);
+        return userBid;
+    }
+
     public UserBidResponse createUserBid(UserBidRequest request){
         UserBidResponse response = new UserBidResponse();
 
@@ -28,15 +39,10 @@ public class UserBidService {
             response.setError(validateUserBidRequest.getError());
             return response;
         }
-        
-        UserBid userBid = new UserBid();
-        userBid.setAddress(request.getSiteAddress());
-        userBid.setBidStatus(new BidStatus());
-        userBid.setDateOfBid(request.getDateOfBid());
-        userBid.setProfitPercentageOverride(request.getProfitPercentage());
-        userBid.setScopeOfWork(request.getScopeOfWork());
-        userBid.setDateOfBid(request.getDateOfBid());
+
+        UserBid userBid = mapUserBidRequest(request);
         userBid = this.postgresDbService.saveBid(userBid);
+
         response.setUserBid(userBid);
         return response;
     }
