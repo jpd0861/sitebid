@@ -4,12 +4,14 @@ import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.ProductCategory;
 import com.stronghaul.sitebid.models.Customer;
+import com.stronghaul.sitebid.models.Product;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserCrew;
 import com.stronghaul.sitebid.models.UserCustomer;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
 import com.stronghaul.sitebid.map.ProductCategoryDto;
+import com.stronghaul.sitebid.map.ProductDto;
 import com.stronghaul.sitebid.map.UserBidDto;
 import com.stronghaul.sitebid.map.UserCrewDto;
 import com.stronghaul.sitebid.map.UserCustomerDto;
@@ -441,5 +443,57 @@ public class PostgresDbService {
         });
 
         return categories;
+    }
+
+    public ArrayList<Product> getProduct(Long id) {
+        final ArrayList<Product> products = new ArrayList<>();
+        final ProductDto productDto = new ProductDto();
+        jdbcTemplate.execute((Connection connection) -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM strong_haul_bid.product_get(?)")) {
+                preparedStatement.setInt(1, id.intValue());
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    products.addAll(productDto.map(resultSet));
+                }
+                return products;
+            }
+        });
+
+        return products;
+    }
+
+    public Product saveProduct(Product product) {
+        final String procedureCall = "CALL strong_haul_bid.product_insert(?, ?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, product.getProductCategoryId().intValue());
+                callableStatement.setDouble(2, product.getAverageWeight());
+                callableStatement.setString(3, product.getDescription());
+                callableStatement.setInt(4, 0);
+                callableStatement.registerOutParameter(4, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(4);
+                return null;
+            }
+        });
+        product.setId(generatedId[0]);
+        return product;
+    }
+
+    public Product updateProduct(Product product) {
+        final String procedureCall = "CALL strong_haul_bid.product_update(?, ?, ?, ?)";
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, product.getId().intValue());
+                callableStatement.setInt(2, product.getProductCategoryId().intValue());
+                callableStatement.setDouble(3, product.getAverageWeight());
+                callableStatement.setString(4, product.getDescription());
+                callableStatement.execute();
+                return null;
+            }
+        });
+        return product;
     }
 }
