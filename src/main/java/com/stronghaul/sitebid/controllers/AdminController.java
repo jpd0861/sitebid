@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stronghaul.sitebid.models.ProductCategory;
-import com.stronghaul.sitebid.models.UserBid;
-import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.services.PostgresDbService;
 
 
