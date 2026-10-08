@@ -2,12 +2,14 @@ package com.stronghaul.sitebid.services;
 
 import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.models.Address;
+import com.stronghaul.sitebid.models.ProductCategory;
 import com.stronghaul.sitebid.models.Customer;
 import com.stronghaul.sitebid.models.UserBid;
 import com.stronghaul.sitebid.models.UserCrew;
 import com.stronghaul.sitebid.models.UserCustomer;
 import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
+import com.stronghaul.sitebid.map.ProductCategoryDto;
 import com.stronghaul.sitebid.map.UserBidDto;
 import com.stronghaul.sitebid.map.UserCrewDto;
 import com.stronghaul.sitebid.map.UserCustomerDto;
@@ -384,5 +386,60 @@ public class PostgresDbService {
         });
 
         return userBids;
+    }
+
+    private Long insertProductCategory(String category) {
+        final String procedureCall = "CALL strong_haul_bid.product_category_insert(?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setString(1, category);
+                callableStatement.setInt(2, 0);
+                callableStatement.registerOutParameter(2, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(2);
+                return null;
+            }
+        });
+        return generatedId[0];
+    }
+
+    public ProductCategory saveProductCategory(String category) {
+        Long id = insertProductCategory(category);
+        ProductCategory cat = new ProductCategory();
+        cat.setId(id);
+        cat.setCategory(category);
+        return cat;
+    }
+
+    public ProductCategory updateProductCategory(ProductCategory category) {
+        final String procedureCall = "CALL strong_haul_bid.product_category_update(?, ?)";
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, category.getId().intValue());
+                callableStatement.setString(2, category.getCategory());
+                callableStatement.execute();
+                return null;
+            }
+        });
+        return category;
+    }
+
+    public ArrayList<ProductCategory> getProductCategory(Long id) {
+        final ArrayList<ProductCategory> categories = new ArrayList<>();
+        final ProductCategoryDto productCategoryDto = new ProductCategoryDto();
+        jdbcTemplate.execute((Connection connection) -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM strong_haul_bid.product_category_get(?)")) {
+                preparedStatement.setInt(1, id.intValue());
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    categories.addAll(productCategoryDto.map(resultSet));
+                }
+                return categories;
+            }
+        });
+
+        return categories;
     }
 }

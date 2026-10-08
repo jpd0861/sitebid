@@ -1,9 +1,11 @@
 package com.stronghaul.sitebid.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.stronghaul.sitebid.models.UserProfile;
 
+@Service 
 public class ValidateUserProfile {
 
     public static String ERROR_NULL_USER_PROFILE = "The user profile is null";
