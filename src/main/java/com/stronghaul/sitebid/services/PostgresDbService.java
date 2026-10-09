@@ -1,6 +1,7 @@
 package com.stronghaul.sitebid.services;
 
 import com.stronghaul.sitebid.models.UserProfile;
+import com.stronghaul.sitebid.models.Vendor;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.ProductCategory;
 import com.stronghaul.sitebid.models.Customer;
@@ -15,6 +16,7 @@ import com.stronghaul.sitebid.map.ProductDto;
 import com.stronghaul.sitebid.map.UserBidDto;
 import com.stronghaul.sitebid.map.UserCrewDto;
 import com.stronghaul.sitebid.map.UserCustomerDto;
+import com.stronghaul.sitebid.map.VendorDto;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -495,5 +497,58 @@ public class PostgresDbService {
             }
         });
         return product;
+    }
+
+    public ArrayList<Vendor> getVendors(Long id) {
+        final ArrayList<Vendor> vendors = new ArrayList<>();
+        final VendorDto vendorDto = new VendorDto();
+        jdbcTemplate.execute((Connection connection) -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM strong_haul_bid.vendor_get(?)")) {
+                preparedStatement.setInt(1, id.intValue());
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    vendors.addAll(vendorDto.map(resultSet));
+                }
+                return vendors;
+            }
+        });
+        return vendors;
+    }
+
+    public Vendor saveVendor(Vendor vendor) {
+        final String procedureCall = "CALL strong_haul_bid.vendor_insert(?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setString(1, vendor.getCompanyName());
+                callableStatement.setInt(2, vendor.getAddressId().intValue());
+                callableStatement.setBigDecimal(3, BigDecimal.valueOf(vendor.getDiscountPercentage()));
+                callableStatement.setString(4, vendor.getPhone());
+                callableStatement.setInt(5, 0);
+                callableStatement.registerOutParameter(5, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(5);
+                return null;
+            }
+        });
+        vendor.setId(generatedId[0]);
+        return vendor;
+    }
+
+    public Vendor updateVendor(Vendor vendor) {
+        final String procedureCall = "CALL strong_haul_bid.vendor_update(?, ?, ?, ?, ?)";
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, vendor.getId().intValue());
+                callableStatement.setString(2, vendor.getCompanyName());
+                callableStatement.setInt(3, vendor.getAddressId().intValue());
+                callableStatement.setBigDecimal(4, BigDecimal.valueOf(vendor.getDiscountPercentage()));
+                callableStatement.setString(5, vendor.getPhone());
+                callableStatement.execute();
+                return null;
+            }
+        });
+        return vendor;
     }
 }

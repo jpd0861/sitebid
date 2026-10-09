@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stronghaul.sitebid.controllers.AdminController.ProductResponse;
 import com.stronghaul.sitebid.models.Product;
 import com.stronghaul.sitebid.models.ProductCategory;
+import com.stronghaul.sitebid.models.Vendor;
 import com.stronghaul.sitebid.services.ProductCategoryService;
 import com.stronghaul.sitebid.services.ProductService;
+import com.stronghaul.sitebid.services.VendorService;
 
 
 @RestController
@@ -22,6 +25,7 @@ public class AdminController {
 
     @Autowired private ProductService productService;
     @Autowired private ProductCategoryService productCategoryService;
+    @Autowired private VendorService vendorService;
 
     //#region Product Category Endpoints
     @PostMapping ("/category-get")
@@ -113,6 +117,64 @@ public class AdminController {
                     product.getDescription(),
                     product.getAverageWeight(),
                     product.getProductCategoryId());
+        }
+    }
+    //#endregion
+
+
+
+
+
+
+    //#region Vendor Endpoints
+    @PostMapping ("/vendor-get")
+    public ResponseEntity<ArrayList<Vendor>> getVendor(@RequestBody GetVendorRequest request) {
+        ArrayList<Vendor> vendors = vendorService.get(request.id());
+        if (!vendors.isEmpty()) {
+            return ResponseEntity.ok(vendors);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/vendor-save")
+    public ResponseEntity<VendorResponse> createVendor(@RequestBody Vendor request) {
+        Vendor vendor = vendorService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(VendorResponse.from(vendor));
+    }
+
+    @PostMapping("/vendor-update")
+    public ResponseEntity<VendorResponse> updateVendor(@RequestBody Vendor vendor) {
+        Vendor updatedVendor = vendorService.update(vendor);
+        return ResponseEntity.ok(VendorResponse.from(updatedVendor));
+    }
+
+    public record GetVendorRequest(
+            Long id) {
+    }
+
+    public record SaveVendorRequest(
+            Long id,
+            String companyName,
+            Long addressId,
+            Double discountPercentage,
+            String phone) {
+    }
+
+    public record VendorResponse(
+            Long id,
+            String companyName,
+            Long addressId,
+            Double discountPercentage,
+            String phone) {
+
+        private static VendorResponse from(Vendor vendor) {
+            return new VendorResponse(
+                    vendor.getId(),
+                    vendor.getCompanyName(),
+                    vendor.getAddressId(),
+                    vendor.getDiscountPercentage(),
+                    vendor.getPhone());
         }
     }
     //#endregion
