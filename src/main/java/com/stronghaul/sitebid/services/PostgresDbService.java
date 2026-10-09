@@ -445,7 +445,7 @@ public class PostgresDbService {
         return categories;
     }
 
-    public ArrayList<Product> getProduct(Long id) {
+    public ArrayList<Product> getProducts(Long id) {
         final ArrayList<Product> products = new ArrayList<>();
         final ProductDto productDto = new ProductDto();
         jdbcTemplate.execute((Connection connection) -> {
@@ -463,13 +463,13 @@ public class PostgresDbService {
     }
 
     public Product saveProduct(Product product) {
-        final String procedureCall = "CALL strong_haul_bid.product_insert(?, ?, ?, ?, ?, ?)";
+        final String procedureCall = "CALL strong_haul_bid.product_insert(?, ?, ?, ?)";
         final Long[] generatedId = new Long[1];
 
         jdbcTemplate.execute((Connection connection) -> {
             try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
                 callableStatement.setInt(1, product.getProductCategoryId().intValue());
-                callableStatement.setDouble(2, product.getAverageWeight());
+                callableStatement.setBigDecimal(2, BigDecimal.valueOf(product.getAverageWeight()));
                 callableStatement.setString(3, product.getDescription());
                 callableStatement.setInt(4, 0);
                 callableStatement.registerOutParameter(4, Types.INTEGER);
@@ -488,7 +488,7 @@ public class PostgresDbService {
             try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
                 callableStatement.setInt(1, product.getId().intValue());
                 callableStatement.setInt(2, product.getProductCategoryId().intValue());
-                callableStatement.setDouble(3, product.getAverageWeight());
+                callableStatement.setBigDecimal(3, BigDecimal.valueOf(product.getAverageWeight()));
                 callableStatement.setString(4, product.getDescription());
                 callableStatement.execute();
                 return null;
