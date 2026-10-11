@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.stronghaul.sitebid.models.BulkCalculationRequest;
-import com.stronghaul.sitebid.models.BulkCalculationResponse;
 
 public class BulkCalculationServiceTest {
 
@@ -26,9 +25,8 @@ public class BulkCalculationServiceTest {
         request.setDepthInInches(36.0);
 
         Double expectedCubicYards = (23.0 * 12.0 * (36.0 / 12)) / 27;
-        BulkCalculationResponse response = bulkCalculationService.calculateBulk(request);
+        Double actualCubicYards = bulkCalculationService.calculateBulk(request);
 
-        Double actualCubicYards = response.getCubicYardsNeeded();
         assertEquals(expectedCubicYards, actualCubicYards, 0.01);
     }
 
