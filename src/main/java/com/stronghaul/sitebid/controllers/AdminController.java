@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stronghaul.sitebid.controllers.AdminController.VendorResponse;
 import com.stronghaul.sitebid.models.Product;
 import com.stronghaul.sitebid.models.ProductCategory;
 import com.stronghaul.sitebid.models.Vendor;
