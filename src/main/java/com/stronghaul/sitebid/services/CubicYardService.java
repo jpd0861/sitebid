@@ -2,12 +2,12 @@ package com.stronghaul.sitebid.services;
 
 import org.springframework.stereotype.Service;
 
-import com.stronghaul.sitebid.models.BulkCalculationRequest;
+import com.stronghaul.sitebid.models.CubicYardRequest;
 
 @Service 
-public class BulkCalculationService {
+public class CubicYardService {
 
-    public Double calculateBulk(BulkCalculationRequest request) {
+    public Double calculate(CubicYardRequest request) {
         Double cubicYardsNeeded = (
             request.getLengthInFeet() * 
             request.getWidthInFeet() * 

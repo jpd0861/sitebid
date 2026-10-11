@@ -1,6 +1,6 @@
 package com.stronghaul.sitebid.models;
 
-public class BulkCalculationRequest {
+public class CubicYardRequest {
     private Double lengthInFeet;
     private Double widthInFeet;
     private Double depthInInches;

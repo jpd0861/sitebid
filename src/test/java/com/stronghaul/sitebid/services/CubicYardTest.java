@@ -6,26 +6,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.stronghaul.sitebid.models.BulkCalculationRequest;
+import com.stronghaul.sitebid.models.CubicYardRequest;
 
-public class BulkCalculationServiceTest {
+public class CubicYardTest {
 
-    @Autowired private BulkCalculationService bulkCalculationService;
+    @Autowired private CubicYardService bulkCalculationService;
 
     @BeforeEach 
     public void setUp() {
-        bulkCalculationService = new BulkCalculationService();
+        bulkCalculationService = new CubicYardService();
     }
 
     @Test 
-    public void calculateBulkReturnsCorrectCubicYards() {
-        BulkCalculationRequest request = new BulkCalculationRequest();
+    public void returnsCorrectCubicYards() {
+        CubicYardRequest request = new CubicYardRequest();
         request.setLengthInFeet(23.0);
         request.setWidthInFeet(12.0);
         request.setDepthInInches(36.0);
 
         Double expectedCubicYards = (23.0 * 12.0 * (36.0 / 12)) / 27;
-        Double actualCubicYards = bulkCalculationService.calculateBulk(request);
+        Double actualCubicYards = bulkCalculationService.calculate(request);
 
         assertEquals(expectedCubicYards, actualCubicYards, 0.01);
     }
