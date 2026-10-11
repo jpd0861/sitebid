@@ -4,20 +4,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.stronghaul.sitebid.configuration.TrailerConfig;
 import com.stronghaul.sitebid.models.CubicYardRequest;
 
 public class CubicYardTest {
 
-    @Autowired private CubicYardService bulkCalculationService;
+    private CubicYardService bulkCalculationService;
 
-    @BeforeEach 
+    @BeforeEach
     public void setUp() {
-        bulkCalculationService = new CubicYardService();
+        TrailerConfig trailerConfig = new TrailerConfig();
+        trailerConfig.setMaxPayload(9500.0);
+        bulkCalculationService = new CubicYardService(trailerConfig);
     }
 
-    @Test 
+    @Test
     public void returnsCorrectCubicYards() {
         CubicYardRequest request = new CubicYardRequest();
         request.setLengthInFeet(23.0);
@@ -30,4 +32,11 @@ public class CubicYardTest {
         assertEquals(expectedCubicYards, actualCubicYards, 0.01);
     }
 
+    @Test
+    public void returnsCorrectMaxCubicYardsPerTrip() {
+        Double productWeight = 2700.0;
+        Double expectedMaxCubicYardsPerTrip = (9500.0/productWeight);
+        Double actualMaxCubicYardsPerTrip = bulkCalculationService.getMaxCubicYardsPerTrip(productWeight);
+        assertEquals(expectedMaxCubicYardsPerTrip, actualMaxCubicYardsPerTrip, 0.01);
+    }
 }
