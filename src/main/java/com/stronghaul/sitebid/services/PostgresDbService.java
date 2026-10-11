@@ -2,6 +2,7 @@ package com.stronghaul.sitebid.services;
 
 import com.stronghaul.sitebid.models.UserProfile;
 import com.stronghaul.sitebid.models.Vendor;
+import com.stronghaul.sitebid.models.VendorProduct;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.ProductCategory;
 import com.stronghaul.sitebid.models.Customer;
@@ -17,6 +18,7 @@ import com.stronghaul.sitebid.map.UserBidDto;
 import com.stronghaul.sitebid.map.UserCrewDto;
 import com.stronghaul.sitebid.map.UserCustomerDto;
 import com.stronghaul.sitebid.map.VendorDto;
+import com.stronghaul.sitebid.map.VendorProductDto;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -550,5 +552,58 @@ public class PostgresDbService {
             }
         });
         return vendor;
+    }
+
+    public ArrayList<VendorProduct> getVendorProducts(Long id) {
+        final ArrayList<VendorProduct> vendorProducts = new ArrayList<>();
+        final VendorProductDto vendorProductDto = new VendorProductDto();
+        jdbcTemplate.execute((Connection connection) -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM strong_haul_bid.vendor_product_get(?)")) {
+                preparedStatement.setInt(1, id.intValue());
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    vendorProducts.addAll(vendorProductDto.map(resultSet));
+                }
+                return vendorProducts;
+            }
+        });
+        return vendorProducts;
+    }
+
+    public VendorProduct saveVendorProduct(VendorProduct vendorProduct) {
+        final String procedureCall = "CALL strong_haul_bid.vendor_product_insert(?, ?, ?, ?, ?)";
+        final Long[] generatedId = new Long[1];
+
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, vendorProduct.getVendorId().intValue());
+                callableStatement.setInt(2, vendorProduct.getProductId().intValue());
+                callableStatement.setBigDecimal(3, BigDecimal.valueOf(vendorProduct.getRetail()));
+                callableStatement.setBigDecimal(4, BigDecimal.valueOf(vendorProduct.getDiscountPercentage()));
+                callableStatement.setInt(5, 0);
+                callableStatement.registerOutParameter(5, Types.INTEGER);
+                callableStatement.execute();
+                generatedId[0] = (long) callableStatement.getInt(5);
+                return null;
+            }
+        });
+        vendorProduct.setId(generatedId[0]);
+        return vendorProduct;
+    }
+
+    public VendorProduct updateVendorProduct(VendorProduct vendorProduct) {
+        final String procedureCall = "CALL strong_haul_bid.vendor_product_update(?, ?, ?, ?, ?)";
+        jdbcTemplate.execute((Connection connection) -> {
+            try (CallableStatement callableStatement = connection.prepareCall(procedureCall)) {
+                callableStatement.setInt(1, vendorProduct.getId().intValue());
+                callableStatement.setInt(2, vendorProduct.getVendorId().intValue());
+                callableStatement.setInt(3, vendorProduct.getProductId().intValue());
+                callableStatement.setBigDecimal(4, BigDecimal.valueOf(vendorProduct.getRetail()));
+                callableStatement.setBigDecimal(5, BigDecimal.valueOf(vendorProduct.getDiscountPercentage()));
+                callableStatement.execute();
+                return null;
+            }
+        });
+        return vendorProduct;
     }
 }

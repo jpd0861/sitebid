@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stronghaul.sitebid.controllers.AdminController.ProductResponse;
+import com.stronghaul.sitebid.controllers.AdminController.VendorResponse;
 import com.stronghaul.sitebid.models.Product;
 import com.stronghaul.sitebid.models.ProductCategory;
 import com.stronghaul.sitebid.models.Vendor;
+import com.stronghaul.sitebid.models.VendorProduct;
 import com.stronghaul.sitebid.services.ProductCategoryService;
 import com.stronghaul.sitebid.services.ProductService;
+import com.stronghaul.sitebid.services.VendorProductService;
 import com.stronghaul.sitebid.services.VendorService;
 
 
@@ -26,6 +28,7 @@ public class AdminController {
     @Autowired private ProductService productService;
     @Autowired private ProductCategoryService productCategoryService;
     @Autowired private VendorService vendorService;
+    @Autowired private VendorProductService vendorProductService;
 
     //#region Product Category Endpoints
     @PostMapping ("/category-get")
@@ -121,11 +124,6 @@ public class AdminController {
     }
     //#endregion
 
-
-
-
-
-
     //#region Vendor Endpoints
     @PostMapping ("/vendor-get")
     public ResponseEntity<ArrayList<Vendor>> getVendor(@RequestBody GetVendorRequest request) {
@@ -175,6 +173,60 @@ public class AdminController {
                     vendor.getAddressId(),
                     vendor.getDiscountPercentage(),
                     vendor.getPhone());
+        }
+    }
+    //#endregion
+
+
+    //#region Vendor Product Endpoints
+    @PostMapping ("/vendor-product-get")
+    public ResponseEntity<ArrayList<VendorProduct>> getVendorProducts(@RequestBody GetVendorRequest request) {
+        ArrayList<VendorProduct> vendorProducts = vendorProductService.get(request.id());
+        if (!vendorProducts.isEmpty()) {
+            return ResponseEntity.ok(vendorProducts);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/vendor-product-save")
+    public ResponseEntity<VendorProductResponse> createVendorProduct(@RequestBody VendorProduct request) {
+        VendorProduct vendorProduct = vendorProductService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(VendorProductResponse.from(vendorProduct));
+    }
+
+    @PostMapping("/vendor-product-update")
+    public ResponseEntity<VendorProductResponse> updateVendorProduct(@RequestBody VendorProduct vendorProduct) {
+        VendorProduct updatedVendorProduct = vendorProductService.update(vendorProduct);
+        return ResponseEntity.ok(VendorProductResponse.from(updatedVendorProduct));
+    }
+
+    public record GetVendorProductRequest(
+            Long id) {
+    }
+
+    public record SaveVendorProductRequest(
+            Long id,
+            String companyName,
+            Long addressId,
+            Double discountPercentage,
+            String phone) {
+    }
+
+    public record VendorProductResponse(
+            Long id,
+            Long vendorId,
+            Long productId,
+            Double discountPercentage,
+            Double retail) {
+
+        private static VendorProductResponse from(VendorProduct vendorProduct) {
+            return new VendorProductResponse(
+                    vendorProduct.getId(),
+                    vendorProduct.getVendorId(),
+                    vendorProduct.getProductId(),
+                    vendorProduct.getDiscountPercentage(),
+                    vendorProduct.getRetail());
         }
     }
     //#endregion
