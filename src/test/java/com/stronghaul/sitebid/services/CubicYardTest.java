@@ -1,15 +1,12 @@
 package com.stronghaul.sitebid.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.stronghaul.sitebid.configuration.TrailerConfig;
 import com.stronghaul.sitebid.models.CubicYardRequest;
+import com.stronghaul.sitebid.validate.CubicYardValidate;
 
 public class CubicYardTest {
 
@@ -18,10 +15,7 @@ public class CubicYardTest {
     @BeforeEach
     public void setUp() {
         cubicYardService = new CubicYardService();
-
-        TrailerConfig trailerConfig = mock(TrailerConfig.class);
-        when(trailerConfig.getMaxPayload()).thenReturn(9500.0);
-        ReflectionTestUtils.setField(cubicYardService, "trailerConfig", trailerConfig);
+        ReflectionTestUtils.setField(cubicYardService, "cubicYardValidate", new CubicYardValidate());
     }
 
     @Test
@@ -41,7 +35,7 @@ public class CubicYardTest {
     public void returnsCorrectMaxCubicYardsPerTrip() {
         Double productWeight = 2700.0;
         Double expectedMaxCubicYardsPerTrip = (9500.0 / productWeight);
-        Double actualMaxCubicYardsPerTrip = cubicYardService.getMaxCubicYardsPerTrip(productWeight);
+        Double actualMaxCubicYardsPerTrip = cubicYardService.getMaxCubicYardsPerTrip(productWeight, 9500.0);
         assertEquals(expectedMaxCubicYardsPerTrip, actualMaxCubicYardsPerTrip, 0.01);
     }
 }

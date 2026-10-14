@@ -5,6 +5,7 @@ import com.stronghaul.sitebid.models.Vendor;
 import com.stronghaul.sitebid.models.VendorProduct;
 import com.stronghaul.sitebid.models.Address;
 import com.stronghaul.sitebid.models.ProductCategory;
+import com.stronghaul.sitebid.models.StrongHaulSettings;
 import com.stronghaul.sitebid.models.Customer;
 import com.stronghaul.sitebid.models.Product;
 import com.stronghaul.sitebid.models.UserBid;
@@ -14,6 +15,7 @@ import com.stronghaul.sitebid.models.SupplierInventoryCategory;
 import com.stronghaul.sitebid.configuration.PostgresConfig;
 import com.stronghaul.sitebid.map.ProductCategoryDto;
 import com.stronghaul.sitebid.map.ProductDto;
+import com.stronghaul.sitebid.map.StrongHaulSettingsDto;
 import com.stronghaul.sitebid.map.UserBidDto;
 import com.stronghaul.sitebid.map.UserCrewDto;
 import com.stronghaul.sitebid.map.UserCustomerDto;
@@ -605,5 +607,19 @@ public class PostgresDbService {
             }
         });
         return vendorProduct;
+    }
+
+    public StrongHaulSettings getStrongHaulSettings() {
+        final StrongHaulSettingsDto strongHaulSettingsDto = new StrongHaulSettingsDto();
+        
+        jdbcTemplate.execute((Connection connection) -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "SELECT * FROM strong_haul_bid.stronghaulsettings_get()")) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    return strongHaulSettingsDto.map(resultSet);
+                }
+            }
+        });
+        return new StrongHaulSettings();
     }
 }

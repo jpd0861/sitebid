@@ -7,6 +7,10 @@ public class StrongHaulSettings {
     private Double techPlatformFee;
     private Double onlineTransactionFee;
     private Double onlineTransactionPercentage;
+    private Double maxPayload;
+    private String street;
+    private String zip;
+    private String localZipCodes;
 
     // Getters and Setters
     public Long getId() {
@@ -49,5 +53,33 @@ public class StrongHaulSettings {
     }
     public void setOnlineTransactionPercentage(double value) {
         this.onlineTransactionPercentage = value;
+    }
+
+    public Double getMaxPayload(){
+        return this.maxPayload;
+    }
+    public void setMaxPayload(Double value){
+        this.maxPayload = value;
+    }
+
+    public String getStreet(){
+        return this.street;
+    }
+    public void setStreet(String value){
+        this.street = value;
+    }
+
+    public String getZip(){
+        return this.zip;
+    }
+    public void setZip(String value){
+        this.zip = value;
+    }
+
+    public String getLocalZipCodes(){
+        return this.localZipCodes;
+    }
+    public void setLocalZipCodes(String value){
+        this.localZipCodes = value;
     }
 }
